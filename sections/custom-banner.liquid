@@ -235,4 +235,61 @@
     font-size: 24px;
   }
 }
+
+
+
+/* Hide mobile layout on desktop */
+.mobile-banner {
+  display: none;
+}
+
+/* ========================= */
+/* 📱 Mobile Layout */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  /* Hide desktop banner */
+  .desktop-banner {
+    display: none;
+  }
+
+  /* Show mobile layout */
+  .mobile-banner {
+    display: block;
+  }
+
+  .mobile-content {
+    padding: 20px 15px;
+  }
+
+  .mobile-content h1 {
+    font-size: 26px;
+    color: #000;
+    margin-bottom: 10px;
+  }
+
+  .mobile-content p {
+    font-size: 14px;
+    color: #000;
+  }
+
+  .mobile-image {
+    position: relative;
+  }
+
+  .mobile-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Button over image */
+  .mobile-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 20px;
+  }
+}
 </style>
