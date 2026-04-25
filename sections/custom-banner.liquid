@@ -3,7 +3,10 @@
     <h1>{{ section.settings.heading }}</h1>
     <p>{{ section.settings.subheading }}</p>
     <a href="{{ section.settings.button_link }}" class="btn">
-      {{ section.settings.button_text }}
+        <span class="btn-text">{{ section.settings.button_text }}</span>
+        {% if section.settings.arrow_icon != blank %}
+          <img  src="{{ section.settings.arrow_icon | image_url }}"  alt="arrow"  class="btn-arrow" >
+        {% endif %}
     </a>
   </div>
 </section>
@@ -31,6 +34,11 @@
       "type": "text",
       "id": "button_text",
       "label": "Button Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "arrow_icon",
+      "label": "Arrow Icon"
     },
     {
       "type": "url",
