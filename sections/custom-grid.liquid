@@ -7,25 +7,14 @@
       {% if product != blank %}
         <div class="product-card" data-handle="{{ product.handle }}">
 
-          <!-- IMAGE WRAPPER -->
           <div class="img-box">
-            <img src="{{ product.featured_image | image_url: width: 600 }}" />
-
-            <!-- PLUS ICON -->
-            <div class="plus-icon">+</div>
+            <img src="{{ product.featured_image | image_url: width: 700 }}">
+            <button class="quick-view">+</button>
           </div>
 
-          <!-- INFO -->
           <div class="info">
             <h3>{{ product.title }}</h3>
             <p>{{ product.price | money }}</p>
-          </div>
-
-          <!-- INLINE DETAIL PANEL -->
-          <div class="detail-panel">
-            <div class="variant-box"></div>
-
-            <button class="add-btn">Add to Cart</button>
           </div>
 
         </div>
@@ -35,6 +24,34 @@
 
   </div>
 </section>
+
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="overlay"></div>
+
+<div class="product-drawer" id="drawer">
+
+  <button class="close-drawer" id="closeDrawer">×</button>
+
+  <div class="drawer-content">
+
+    <div class="gallery">
+      <img id="mainImg" />
+
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <div class="details">
+      <h2 id="d-title"></h2>
+      <p id="d-price"></p>
+
+      <div class="swatches" id="swatches"></div>
+
+      <button id="addCart">Add to Cart</button>
+    </div>
+
+  </div>
+</div>
 
 {% schema %}
 {
@@ -62,6 +79,7 @@
 {% endschema %}
 
 <style>
+/* GRID */
 .product-grid .grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -70,18 +88,10 @@
 
 .product-card{
   border:1px solid #eee;
-  background:#fff;
-  position:relative;
   overflow:hidden;
-  cursor:pointer;
-  transition:0.3s;
+  background:#fff;
 }
 
-.product-card:hover{
-  transform:translateY(-5px);
-}
-
-/* IMAGE */
 .img-box{
   position:relative;
 }
@@ -91,135 +101,196 @@
   display:block;
 }
 
-/* PLUS ICON */
-.plus-icon{
+/* + BUTTON */
+.quick-view{
   position:absolute;
   top:10px;
   right:10px;
-  width:30px;
-  height:30px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:none;
   background:#000;
   color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  font-size:18px;
+  cursor:pointer;
   opacity:0;
-  transition:0.3s;
+  transition:.3s;
 }
 
-.product-card:hover .plus-icon{
+.product-card:hover .quick-view{
   opacity:1;
 }
 
-/* INFO */
-.info{
-  padding:10px;
+/* OVERLAY */
+.drawer-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  opacity:0;
+  visibility:hidden;
+  transition:.3s;
 }
 
-/* DETAIL PANEL */
-.detail-panel{
-  max-height:0;
-  overflow:hidden;
-  transition:0.4s ease;
-  padding:0 10px;
+/* DRAWER */
+.product-drawer{
+  position:fixed;
+  top:0;
+  right:-500px;
+  width:450px;
+  height:100%;
+  background:#fff;
+  z-index:999;
+  transition:.5s;
+  padding:20px;
+  overflow-y:auto;
 }
 
-.product-card.active .detail-panel{
-  max-height:200px;
-  padding:10px;
+.product-drawer.active{
+  right:0;
 }
 
-.variant-btn{
-  padding:5px 10px;
+.drawer-overlay.active{
+  opacity:1;
+  visibility:visible;
+}
+
+/* GALLERY */
+.gallery img{
+  width:100%;
+  border-radius:10px;
+}
+
+.thumbs{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.thumbs img{
+  width:60px;
+  cursor:pointer;
+  border:1px solid #eee;
+}
+
+/* SWATCHES */
+.swatch{
+  width:25px;
+  height:25px;
+  border-radius:50%;
   border:1px solid #ddd;
-  margin:5px 5px 0 0;
+  display:inline-block;
+  margin:5px;
   cursor:pointer;
 }
 
-.variant-btn.active{
-  background:#000;
-  color:#fff;
+.swatch.active{
+  border:2px solid #000;
 }
 
-.add-btn{
-  margin-top:10px;
-  padding:10px;
+/* BUTTON */
+#addCart{
   width:100%;
+  padding:12px;
   background:#000;
   color:#fff;
   border:none;
+  margin-top:15px;
   cursor:pointer;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .product-drawer{
+    width:100%;
+  }
 }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
 <script>
-document.querySelectorAll(".product-card").forEach(card => {
+let selectedVariant = null;
+let productData = null;
 
-  let selectedVariant = null;
-  let productData = null;
+/* OPEN DRAWER */
+document.querySelectorAll(".quick-view").forEach(btn => {
+  btn.addEventListener("click", async (e) => {
 
-  card.addEventListener("click", async () => {
+    e.stopPropagation();
 
-    const handle = card.dataset.handle;
-
-    // toggle open/close (inline detail)
-    document.querySelectorAll(".product-card").forEach(c => {
-      if(c !== card) c.classList.remove("active");
-    });
-
-    card.classList.toggle("active");
-
-    if(productData) return;
+    const handle = btn.closest(".product-card").dataset.handle;
 
     const res = await fetch(`/products/${handle}.js`);
     productData = await res.json();
 
-    let html = "";
-
-    productData.variants.forEach(v => {
-      html += `<button class="variant-btn" data-id="${v.id}">
-        ${v.title}
-      </button>`;
-    });
-
-    card.querySelector(".variant-box").innerHTML = html;
+    document.getElementById("d-title").innerText = productData.title;
+    document.getElementById("d-price").innerText = (productData.price/100).toFixed(2);
 
     selectedVariant = productData.variants[0]?.id;
-  });
 
+    /* IMAGE GALLERY */
+    document.getElementById("mainImg").src = productData.images[0];
 
-  // variant select
-  card.addEventListener("click", (e) => {
-    if(e.target.classList.contains("variant-btn")){
-      card.querySelectorAll(".variant-btn").forEach(b => b.classList.remove("active"));
-      e.target.classList.add("active");
-      selectedVariant = e.target.dataset.id;
-    }
-  });
-
-
-  // add to cart
-  card.querySelector(".add-btn").addEventListener("click", async (e) => {
-    e.stopPropagation();
-
-    if(!selectedVariant){
-      alert("Select variant first");
-      return;
-    }
-
-    await fetch('/cart/add.js', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        id: selectedVariant,
-        quantity:1
-      })
+    let thumbs = "";
+    productData.images.forEach(img=>{
+      thumbs += `<img src="${img}" onclick="document.getElementById('mainImg').src='${img}'">`;
     });
 
-    alert("Added to cart!");
+    document.getElementById("thumbs").innerHTML = thumbs;
+
+    /* SWATCHES */
+    let swatchHTML = "";
+
+    productData.variants.forEach(v=>{
+      let color = v.title.toLowerCase();
+
+      swatchHTML += `<span class="swatch" data-id="${v.id}" title="${v.title}"></span>`;
+    });
+
+    document.getElementById("swatches").innerHTML = swatchHTML;
+
+    openDrawer();
+  });
+});
+
+/* OPEN DRAWER ANIMATION */
+function openDrawer(){
+  document.getElementById("drawer").classList.add("active");
+  document.getElementById("overlay").classList.add("active");
+
+  gsap.fromTo("#drawer",{x:500},{x:0,duration:0.4});
+}
+
+/* CLOSE */
+document.getElementById("closeDrawer").onclick = closeDrawer;
+document.getElementById("overlay").onclick = closeDrawer;
+
+function closeDrawer(){
+  document.getElementById("drawer").classList.remove("active");
+  document.getElementById("overlay").classList.remove("active");
+}
+
+/* SWATCH SELECT */
+document.addEventListener("click",(e)=>{
+  if(e.target.classList.contains("swatch")){
+    document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));
+    e.target.classList.add("active");
+    selectedVariant = e.target.dataset.id;
+  }
+});
+
+/* ADD TO CART */
+document.getElementById("addCart").addEventListener("click", async ()=>{
+
+  await fetch('/cart/add.js',{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      id:selectedVariant,
+      quantity:1
+    })
   });
 
+  alert("Added to cart!");
 });
 </script>
