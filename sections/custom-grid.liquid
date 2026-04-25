@@ -305,83 +305,92 @@
 </style>
 
 <script>
-    document.querySelectorAll(".qv-btn").forEach(btn => {
+document.addEventListener("DOMContentLoaded", function () {
 
-  btn.addEventListener("click", () => {
+  const modal = document.getElementById("qv-modal");
 
-    const product = JSON.parse(
-      document.getElementById(`product-data-${btn.dataset.id}`).textContent
-    );
+  document.querySelectorAll(".qv-btn").forEach(btn => {
 
-    // BASIC DATA
-    document.getElementById("qv-title").innerText = product.title;
-    document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
-    document.getElementById("qv-img").src = product.featured_image;
-    document.getElementById("qv-desc").innerText = product.description;
+    btn.addEventListener("click", () => {
 
-    // VARIANTS
-    let colors = new Set();
-    let sizes = new Set();
-
-    product.variants.forEach(v => {
-      let parts = v.title.split(" / ");
-      if (parts[0]) colors.add(parts[0]);
-      if (parts[1]) sizes.add(parts[1]);
-    });
-
-    const colorBox = document.getElementById("qv-colors");
-    const sizeBox = document.getElementById("qv-size");
-
-    colorBox.innerHTML = "";
-    sizeBox.innerHTML = "";
-
-    let selectedColor = product.variants[0]?.option1;
-    let selectedSize = product.variants[0]?.option2;
-
-    colors.forEach(c => {
-      const b = document.createElement("button");
-      b.innerText = c;
-      b.onclick = () => selectedColor = c;
-      colorBox.appendChild(b);
-    });
-
-    sizes.forEach(s => {
-      const opt = document.createElement("option");
-      opt.text = s;
-      sizeBox.add(opt);
-    });
-
-    sizeBox.onchange = e => selectedSize = e.target.value;
-
-    // ADD TO CART
-    document.getElementById("qv-add").onclick = () => {
-
-      const variant = product.variants.find(v =>
-        v.option1 === selectedColor &&
-        v.option2 === selectedSize
+      const product = JSON.parse(
+        document.getElementById(`product-data-${btn.dataset.id}`).textContent
       );
 
-      if (!variant) return;
+      // OPEN MODAL
+      modal.style.display = "flex";
 
-      fetch("/cart/add.js", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          id: variant.id,
-          quantity: 1
-        })
+      // BASIC DATA
+      document.getElementById("qv-title").innerText = product.title;
+      document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
+      document.getElementById("qv-img").src = product.images?.[0] || "";
+      document.getElementById("qv-desc").innerText = product.description || "";
+
+      // VARIANTS
+      let colors = new Set();
+      let sizes = new Set();
+
+      product.variants.forEach(v => {
+        let parts = v.title.split(" / ");
+        if (parts[0]) colors.add(parts[0]);
+        if (parts[1]) sizes.add(parts[1]);
       });
 
-    };
+      const colorBox = document.getElementById("qv-colors");
+      const sizeBox = document.getElementById("qv-size");
 
-    document.getElementById("qv-modal").style.display = "flex";
+      colorBox.innerHTML = "";
+      sizeBox.innerHTML = "";
+
+      let selectedColor = product.variants[0]?.option1;
+      let selectedSize = product.variants[0]?.option2;
+
+      colors.forEach(c => {
+        let b = document.createElement("button");
+        b.innerText = c;
+        b.onclick = () => selectedColor = c;
+        colorBox.appendChild(b);
+      });
+
+      sizes.forEach(s => {
+        let opt = document.createElement("option");
+        opt.text = s;
+        sizeBox.add(opt);
+      });
+
+      sizeBox.onchange = e => selectedSize = e.target.value;
+
+      // ADD TO CART
+      document.getElementById("qv-add").onclick = () => {
+
+        const variant = product.variants.find(v =>
+          v.option1 === selectedColor &&
+          v.option2 === selectedSize
+        );
+
+        if (!variant) return;
+
+        fetch("/cart/add.js", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            id: variant.id,
+            quantity: 1
+          })
+        });
+
+      };
+
+    });
+
   });
+
+  // CLOSE MODAL
+  document.querySelector(".qv-close").onclick = () => {
+    modal.style.display = "none";
+  };
 
 });
 
-// CLOSE
-document.querySelector(".qv-close").onclick = () => {
-  document.getElementById("qv-modal").style.display = "none";
-};
 </script>
 
