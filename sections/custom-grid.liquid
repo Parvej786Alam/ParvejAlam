@@ -1,39 +1,29 @@
-<section class="future-shop">
+{% for product in collections.frontpage.products %}
+  <div class="card">
 
-  <aside class="future-filter">
-    <input type="text" id="search" placeholder="Search universe...">
-    <input type="range" id="price" min="0" max="10000">
-  </aside>
+    <img src="{{ product.featured_image | image_url }}">
 
-  <div class="future-grid">
+    <button class="open-modal" data-id="{{ product.id }}">
+      +
+    </button>
 
-    {% for block in section.blocks %}
-      {% assign product = all_products[block.settings.product] %}
+    <!-- Hidden REAL product data -->
+    <div class="product-data" id="product-{{ product.id }}" style="display:none;">
+      <h2>{{ product.title }}</h2>
+      <p>{{ product.price | money }}</p>
+      <div class="desc">{{ product.description }}</div>
 
-      {% if product != blank %}
-
-      <div class="future-card"
-           data-title="{{ product.title | downcase }}"
-           data-price="{{ product.price }}"
-           data-handle="{{ product.handle }}">
-
-        <div class="future-img">
-          <img src="{{ product.featured_image | image_url: width: 800 }}">
-          <div class="orb">+</div>
+      <!-- Variants -->
+      {% for variant in product.variants %}
+        <div class="variant"
+             data-id="{{ variant.id }}"
+             data-title="{{ variant.title }}">
         </div>
-
-        <div class="future-info">
-          <h3>{{ product.title }}</h3>
-          <p>{{ product.price | money }}</p>
-        </div>
-
-      </div>
-
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </div>
 
   </div>
-</section>
+{% endfor %}
 
 {% schema %}
 {
@@ -163,35 +153,37 @@
 </style>
 
 <script>
-const cards = document.querySelectorAll(".future-card");
+document.querySelectorAll(".open-modal").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.id;
 
-/* SEARCH */
-document.getElementById("search").addEventListener("input",(e)=>{
-  let val = e.target.value.toLowerCase();
+    const data = document.getElementById(`product-${id}`);
 
-  cards.forEach(c=>{
-    c.style.display = c.dataset.title.includes(val) ? "block":"none";
-  });
-});
+    document.getElementById("modal-title").innerHTML =
+      data.querySelector("h2").innerHTML;
 
-/* PRICE */
-document.getElementById("price").addEventListener("input",(e)=>{
-  let max = e.target.value;
+    document.getElementById("modal-price").innerHTML =
+      data.querySelector("p").innerHTML;
 
-  cards.forEach(c=>{
-    c.style.display = parseInt(c.dataset.price) <= max ? "block":"none";
-  });
-});
+    document.getElementById("modal-desc").innerHTML =
+      data.querySelector(".desc").innerHTML;
 
-/* CLICK EFFECT */
-document.querySelectorAll(".orb").forEach(orb=>{
-  orb.addEventListener("click",(e)=>{
-    e.stopPropagation();
+    // variants
+    const variants = data.querySelectorAll(".variant");
+    let selected = variants[0].dataset.id;
 
-    const card = orb.closest(".future-card");
+    document.getElementById("add-to-cart").onclick = () => {
+      fetch("/cart/add.js", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          id: selected,
+          quantity: 1
+        })
+      });
+    };
 
-    card.style.boxShadow = "0 0 40px #00f5ff";
-    setTimeout(()=>card.style.boxShadow="",500);
+    document.getElementById("modal").classList.remove("hidden");
   });
 });
 
