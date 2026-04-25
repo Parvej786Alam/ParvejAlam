@@ -102,45 +102,43 @@
 
 /* Button */
 .custom-banner .btn {
-  display: inline-block;
-    padding: 14px 55px;
-    background-color: #000000;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 400;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-}
-
-.custom-banner .btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  padding: 14px 55px;
+  background-color: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-/* Arrow image */
+/* Arrow */
 .custom-banner .btn-arrow {
   width: 18px;
   height: 18px;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  filter: invert(1); /* make arrow white initially */
 }
 
-/* Hover animation */
-.custom-banner .btn:hover .btn-arrow {
-  transform: translateX(5px);
-}
-
-/* Button hover animation */
+/* Hover (applies to BOTH text + arrow) */
 .custom-banner .btn:hover {
-background: #FFF544;
+  background: #FFF544;
   color: #000;
 }
 
-/* subtle shine effect */
+/* Arrow also changes on hover */
+.custom-banner .btn:hover .btn-arrow {
+  transform: translateX(6px);
+  filter: invert(0); /* arrow becomes black */
+}
+
+/* Shine effect */
 .custom-banner .btn::after {
   content: "";
   position: absolute;
