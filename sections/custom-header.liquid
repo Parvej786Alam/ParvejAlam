@@ -133,13 +133,13 @@
   position: relative;
 }
 
-/* LOGO */
+/* LOGO FIXED */
 .header-logo {
   max-height: 40px;
   width: auto;
 }
 
-/* CENTER (DESKTOP) */
+/* CENTER */
 .header-center {
   position: absolute;
   left: 50%;
@@ -183,7 +183,7 @@
   z-index: 1;
 }
 
-/* Hover */
+/* hover animation */
 .header-btn::before {
   content: "";
   position: absolute;
@@ -204,7 +204,7 @@
   color: #fff;
 }
 
-/* Arrow */
+/* ARROW */
 .btn-arrow {
   width: 16px;
   transition: 0.3s;
@@ -261,41 +261,38 @@
   color: #000;
 }
 
-/* ========================= */
-/* 📱 MOBILE FIXED VERSION */
-/* ========================= */
+/* RESPONSIVE */
 @media (max-width: 768px) {
 
-  .custom-header {
-    padding: 12px 15px;
-  }
-
-  /* Flex layout instead of overlap */
   .header-wrapper {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
   }
 
-  /* Toggle LEFT */
-  .mobile-toggle {
-    display: block;
-  }
-
-  /* Logo CENTER */
+  /* Logo center */
   .header-left {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
 
-  /* Button RIGHT */
-  .header-right {
+  /* Show toggle */
+  .mobile-toggle {
     display: block;
+    position: absolute;
+    left: 15px;
+    z-index: 1001;
   }
 
-  /* Center content BELOW header */
+  /* Show button on right */
+  .header-right {
+    display: block;
+    position: absolute;
+    right: 15px;
+  }
+
+  /* FIX: center content below header */
   .header-center {
+    display: block;
     position: static;
     transform: none;
     margin-top: 60px;
@@ -303,15 +300,36 @@
     width: 100%;
   }
 
-  /* Hide desktop menu (use drawer) */
+  /* Stack menu vertically */
+  .desktop-menu ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .desktop-menu a {
+    font-size: 16px;
+  }
+
+  /* Logo size fix */
+  .header-logo {
+    max-height: 32px;
+  }
+
   .desktop-menu {
     display: none;
   }
 
-  /* Logo size */
+  .mobile-toggle {
+    display: block;
+  }
+
   .header-logo {
     max-height: 32px;
   }
+
+  .header-left{
+    margin: 0 auto;
+   }
 }
 </style>
 
