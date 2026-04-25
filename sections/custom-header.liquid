@@ -1,9 +1,7 @@
 <header class="custom-header">
   <div class="header-wrapper">
-
     <!-- MOBILE TOGGLE -->
     <div class="mobile-toggle" id="mobileToggle">☰</div>
-
     <!-- LOGO -->
     <div class="header-left">
       <a href="/">
@@ -14,14 +12,12 @@
         {% endif %}
       </a>
     </div>
-
     <!-- CENTER CONTENT -->
     <div class="header-center">
       {% if section.settings.center_text != blank %}
         <p class="center-text">{{ section.settings.center_text }}</p>
       {% endif %}
     </div>
-
     <!-- BUTTON -->
     <div class="header-right">
       {% if section.settings.button_text != blank %}
@@ -33,23 +29,18 @@
         </a>
       {% endif %}
     </div>
-
   </div>
 </header>
-
 <!-- MOBILE DRAWER -->
 <div class="mobile-menu" id="mobileMenu">
-
   <div class="mobile-menu-header">
     <button id="closeMenu">✕</button>
     <span>TISSO VISON</span>
   </div>
-
   <div class="mobile-box">
     {% if section.settings.center_text != blank %}
       <p class="mobile-center-text">{{ section.settings.center_text }}</p>
     {% endif %}
-  
      <div class="mobile-menu-content">
       {% if section.settings.button_text != blank %}
         <a href="{{ section.settings.button_link }}" class="header-btn mobile-btn">
@@ -61,9 +52,7 @@
       {% endif %}
     </div>
   </div>
-
 </div>
-
 {% schema %}
 {
   "name": "Custom Header",
@@ -110,217 +99,184 @@
 {% endschema %}
 
 <style>
-.custom-header {
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  background: #F5F5F5;
-  padding: 15px 40px;
-}
-
-.header-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-}
-
-.header-logo {
-  max-height: 40px;
-}
-
-/* CENTER DESKTOP */
-.header-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
-.center-text {
-  font-size: 14px;
-}
-
-/* BUTTON */
-.header-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  background: #FFF544;
-  color: #000;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.header-btn::before {
-  content: "";
-  position: absolute;
-  width: 0%;
-  height: 100%;
-  background: #000;
-  transition: 0.4s;
-  z-index: -1;
-}
-
-.header-btn:hover::before {
-  width: 100%;
-}
-
-.header-btn:hover {
-  color: #fff;
-}
-
-.btn-arrow {
-  width: 16px;
-  filter: invert(1);
-  transition: 0.3s;
-}
-
-.header-btn:hover .btn-arrow {
-  transform: translateX(5px);
-  filter: invert(0);
-}
-
-/* MOBILE */
-.mobile-toggle {
-  display: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* DRAWER */
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 80%;
-  height: 100%;
-  background: #fff;
-  padding: 20px;
-  transition: 0.4s;
-  z-index: 9999;
-}
-
-.mobile-menu.active {
-  left: 0;
-}
-
-.mobile-menu-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-}
-
-.mobile-center-text {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* MOBILE BUTTON */
-.mobile-menu-content .mobile-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 14px;
-  background: #FFF544;
-  color: #000;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.mobile-menu-content .mobile-btn::before {
-  content: "";
-  position: absolute;
-  width: 0%;
-  height: 100%;
-  background: #000;
-  transition: 0.4s;
-  z-index: -1;
-}
-
-.mobile-menu-content .mobile-btn:hover::before {
-  width: 100%;
-}
-
-.mobile-menu-content .mobile-btn:hover {
-  color: #fff;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-
-  .custom-header {
-    padding: 12px 15px;
-  }
-
-  .mobile-toggle {
-    display: block;
-  }
-
-  .header-left {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .header-right {
-    display: none;
-  }
-
-  .header-center {
-    display: none;
-  }
-
-  .header-logo {
-    max-height: 32px;
-  }
-
-  .mobile-menu-content .mobile-btn {
+    .custom-header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: #F5F5F5;
+      padding: 15px 40px;
+    }
+    .header-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+    .header-logo {
+      max-height: 40px;
+    }
+    /* CENTER DESKTOP */
+    .header-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .center-text {
+      font-size: 14px;
+    }
+    /* BUTTON */
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: #FFF544;
+      color: #000;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-btn::before {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 100%;
+      background: #000;
+      transition: 0.4s;
+      z-index: -1;
+    }
+    .header-btn:hover::before {
+      width: 100%;
+    }
+    .header-btn:hover {
+      color: #fff;
+    }
+    .btn-arrow {
+      width: 16px;
+      filter: invert(1);
+      transition: 0.3s;
+    }
+    .header-btn:hover .btn-arrow {
+      transform: translateX(5px);
+      filter: invert(0);
+    }
+    .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 80%;
+      height: 100%;
+      background: #fff;
+      padding: 20px;
+      transition: 0.4s;
+      z-index: 9999;
+    }
+    .mobile-menu.active {
+      left: 0;
+    }
+    .mobile-menu-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .mobile-center-text {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .mobile-menu-content .mobile-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      background: #FFF544;
+      color: #000;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .mobile-menu-content .mobile-btn::before {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 100%;
+      background: #000;
+      transition: 0.4s;
+      z-index: -1;
+    }
+    .mobile-menu-content .mobile-btn:hover::before {
+      width: 100%;
+    }
+    .mobile-menu-content .mobile-btn:hover {
+      color: #fff;
+    }
+    @media (max-width: 768px) {
+      .custom-header {
+        padding: 12px 15px;
+      }
+      .mobile-toggle {
+        display: block;
+      }
+      .header-left {
         position: absolute;
-        top: 140px;
         left: 50%;
         transform: translateX(-50%);
-        display: inline-flex;
-        align-items: center;
-        gap: 29px;
-        padding: 10px 20px 10px 20px;
-        background: #FFF544;
-        color: #000;
-        font-size: 16px;
-        overflow: hidden;
-        width: 70%;
-        height: fit-content;
+      }
+      .header-right {
+        display: none;
+      }
+      .header-center {
+        display: none;
+      }
+      .header-logo {
+        max-height: 32px;
+      }
+        .mobile-menu-content .mobile-btn {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: inline-flex;
+            align-items: center;
+            gap: 29px;
+            padding: 10px 20px 10px 20px;
+            background: #FFF544;
+            color: #000;
+            font-size: 16px;
+            overflow: hidden;
+            width: 70%;
+            height: fit-content;
+        }
+        #closeMenu{
+            border: none;
+            font-size: 20px;
+            font-weight: 700;
+            background: transparent;
+        }
+        .mobile-menu-header span{
+            font-size: 25px;
+            font-family: 'Jost';
+            padding-right: 20%;
+        }
+        .mobile-menu-content .mobile-btn .btn-arrow {
+            width: 25px;
+            height: 25px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            filter: invert(1);
+        }
+        .mobile-menu-content .mobile-btn:hover .btn-arrow {
+            transform: translateX(6px);
+            filter: invert(0);
+        }
     }
-
-    #closeMenu{
-        border: none;
-        font-size: 20px;
-        font-weight: 700;
-        background: transparent;
-    }
-    .mobile-menu-header span{
-        font-size: 25px;
-        font-family: 'Jost';
-        padding-right: 20%;
-    }
-    .mobile-menu-content .mobile-btn .btn-arrow {
-        width: 25px;
-        height: 25px;
-        object-fit: contain;
-        transition: all 0.3s ease;
-        filter: invert(1);
-    }
-    .mobile-menu-content .mobile-btn:hover .btn-arrow {
-        transform: translateX(6px);
-        filter: invert(0);
-    }
-
-}
 </style>
 
 <script>
@@ -328,11 +284,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const openBtn = document.getElementById("mobileToggle");
   const closeBtn = document.getElementById("closeMenu");
   const menu = document.getElementById("mobileMenu");
-
   openBtn.addEventListener("click", () => {
     menu.classList.add("active");
   });
-
   closeBtn.addEventListener("click", () => {
     menu.classList.remove("active");
   });
