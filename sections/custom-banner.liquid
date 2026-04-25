@@ -265,20 +265,18 @@
 .mobile-btn {
   position: absolute;
   bottom: 20px;
-  left: 20px;
-
+  left: 50%;
+  transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
   gap: 29px;
-  padding: 14px 25px 14px 55px;
-
+  padding: 13px 20px 13px 20px;
   background-color: #000;
   color: #fff;
   font-size: 16px;
   font-weight: 400;
   text-decoration: none;
   text-transform: uppercase;
-
   overflow: hidden;
   z-index: 1;
 }
@@ -302,7 +300,7 @@
   height: 25px;
   object-fit: contain;
   transition: all 0.3s ease;
-  filter: invert(1); /* white initially */
+  filter: invert(0);
 }
 
 /* Hover */
@@ -317,7 +315,7 @@
 /* Arrow hover */
 .mobile-btn:hover .btn-arrow {
   transform: translateX(6px);
-  filter: invert(0); /* black on hover */
+   filter: invert(1);
 }
 
 }
