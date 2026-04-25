@@ -23,6 +23,15 @@
         "button_link": "shopify://collections/all"
       }
     },
+    "custom_content_PGzLnA": {
+      "type": "custom-content",
+      "name": "Simple Content Section",
+      "settings": {
+        "content": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL",
+        "text_color": "#000000",
+        "bg_color": "#ffffff"
+      }
+    },
     "hero_jVaWmY": {
       "type": "hero",
       "blocks": {
@@ -298,22 +307,12 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
-    },
-    "custom_content_PGzLnA": {
-      "type": "custom-content",
-      "name": "Simple Content Section",
-      "settings": {
-        "title": "",
-        "content": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL",
-        "text_color": "#000000",
-        "bg_color": "#ffffff"
-      }
     }
   },
   "order": [
     "custom_banner_EkyNHi",
+    "custom_content_PGzLnA",
     "hero_jVaWmY",
-    "product_list_fa6P9H",
-    "custom_content_PGzLnA"
+    "product_list_fa6P9H"
   ]
 }
