@@ -50,15 +50,15 @@
   {% endif %}
 
    <div class="mobile-menu-content">
-  {% if section.settings.button_text != blank %}
-    <a href="{{ section.settings.button_link }}" class="mobile-btn">
-      <span>{{ section.settings.button_text }}</span>
-      {% if section.settings.arrow_icon != blank %}
-        <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow" alt="arrow">
-      {% endif %}
-    </a>
-  {% endif %}
-</div>
+    {% if section.settings.button_text != blank %}
+      <a href="{{ section.settings.button_link }}" class="header-btn mobile-btn">
+        <span>{{ section.settings.button_text }}</span>
+        {% if section.settings.arrow_icon != blank %}
+          <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow" alt="arrow">
+        {% endif %}
+      </a>
+    {% endif %}
+  </div>
 
 </div>
 
@@ -188,39 +188,55 @@
   cursor: pointer;
 }
 
-/* FIX: mobile content center */
-.mobile-menu-content {
+/* DRAWER */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+  transition: 0.4s;
+  z-index: 9999;
+}
+
+.mobile-menu.active {
+  left: 0;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.mobile-center-text {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* MOBILE BUTTON */
+.mobile-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60vh;
-}
-
-/* FIX: proper mobile button */
-.mobile-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 14px 25px;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
   background: #FFF544;
   color: #000;
   text-decoration: none;
-  font-size: 16px;
   position: relative;
   overflow: hidden;
-  z-index: 1;
 }
 
-/* animation */
 .mobile-btn::before {
   content: "";
   position: absolute;
   width: 0%;
   height: 100%;
   background: #000;
-  left: 0;
-  top: 0;
   transition: 0.4s;
   z-index: -1;
 }
@@ -231,18 +247,6 @@
 
 .mobile-btn:hover {
   color: #fff;
-}
-
-/* arrow fix */
-.mobile-btn .btn-arrow {
-  width: 16px;
-  filter: invert(1);
-  transition: 0.3s;
-}
-
-.mobile-btn:hover .btn-arrow {
-  transform: translateX(5px);
-  filter: invert(0);
 }
 
 /* RESPONSIVE */
