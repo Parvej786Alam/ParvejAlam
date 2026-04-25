@@ -305,132 +305,92 @@
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  const modal = document.getElementById("qv-modal");
-
-  if (!modal) return;
-
-  // CLOSE MODAL
-  const closeBtn = document.querySelector(".qv-close");
-  if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-  }
-
-  // OPEN POPUP ON + BUTTON CLICK
-  document.querySelectorAll(".qv-btn").forEach(btn => {
-
-    btn.addEventListener("click", () => {
-
-      const id = btn.dataset.id;
-
-      const productEl = document.getElementById(`product-data-${id}`);
-      if (!productEl) return;
-
-      const product = JSON.parse(productEl.textContent);
-
-      // OPEN MODAL
-      modal.style.display = "flex";
-
-      // BASIC DATA
-      const titleEl = document.getElementById("qv-title");
-      const priceEl = document.getElementById("qv-price");
-      const imgEl = document.getElementById("qv-img");
-      const descEl = document.getElementById("qv-desc");
-
-      if (titleEl) titleEl.innerText = product.title;
-      if (priceEl) priceEl.innerText = (product.price / 100).toFixed(2) + " ";
-      if (imgEl) imgEl.src = product.images?.[0] || "";
-      if (descEl) descEl.innerText = product.description || "";
-
-      // VARIANTS SAFE HANDLING
-      let colors = new Set();
-      let sizes = new Set();
-
-      product.variants.forEach(v => {
-        if (v.option1) colors.add(v.option1);
-        if (v.option2) sizes.add(v.option2);
-      });
-
-      const colorBox = document.getElementById("qv-colors");
-      const sizeBox = document.getElementById("qv-size");
-
-      if (colorBox) colorBox.innerHTML = "";
-      if (sizeBox) sizeBox.innerHTML = "";
-
-      let selectedColor = product.variants[0]?.option1 || "";
-      let selectedSize = product.variants[0]?.option2 || "";
-
-      // COLOR BUTTONS
-      colors.forEach(color => {
-        const btn = document.createElement("button");
-        btn.innerText = color;
-
+    document.addEventListener("DOMContentLoaded", function () {
+    
+      const modal = document.getElementById("qv-modal");
+    
+      document.querySelectorAll(".qv-btn").forEach(btn => {
+    
         btn.addEventListener("click", () => {
-          selectedColor = color;
-
-          // active class (optional UI)
-          colorBox.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-        });
-
-        colorBox.appendChild(btn);
-      });
-
-      // SIZE OPTIONS
-      sizes.forEach(size => {
-        const opt = document.createElement("option");
-        opt.value = size;
-        opt.text = size;
-        sizeBox.appendChild(opt);
-      });
-
-      sizeBox.value = selectedSize;
-
-      sizeBox.onchange = (e) => {
-        selectedSize = e.target.value;
-      };
-
-      // ADD TO CART
-      const addBtn = document.getElementById("qv-add");
-
-      if (addBtn) {
-        addBtn.onclick = () => {
-
-          const variant = product.variants.find(v =>
-            v.option1 === selectedColor &&
-            v.option2 === selectedSize
+    
+          const product = JSON.parse(
+            document.getElementById(`product-data-${btn.dataset.id}`).textContent
           );
-
-          if (!variant) {
-            alert("Variant not found");
-            return;
-          }
-
-          fetch("/cart/add.js", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              id: variant.id,
-              quantity: 1
-            })
-          })
-          .then(res => res.json())
-          .then(() => {
-            alert("Added to cart");
+    
+          // OPEN MODAL
+          modal.style.display = "flex";
+    
+          // BASIC DATA
+          document.getElementById("qv-title").innerText = product.title;
+          document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
+          document.getElementById("qv-img").src = product.images?.[0] || "";
+          document.getElementById("qv-desc").innerText = product.description || "";
+    
+          // VARIANTS
+          let colors = new Set();
+          let sizes = new Set();
+    
+          product.variants.forEach(v => {
+            let parts = v.title.split(" / ");
+            if (parts[0]) colors.add(parts[0]);
+            if (parts[1]) sizes.add(parts[1]);
           });
-
-        };
-      }
-
+    
+          const colorBox = document.getElementById("qv-colors");
+          const sizeBox = document.getElementById("qv-size");
+    
+          colorBox.innerHTML = "";
+          sizeBox.innerHTML = "";
+    
+          let selectedColor = product.variants[0]?.option1;
+          let selectedSize = product.variants[0]?.option2;
+    
+          colors.forEach(c => {
+            let b = document.createElement("button");
+            b.innerText = c;
+            b.onclick = () => selectedColor = c;
+            colorBox.appendChild(b);
+          });
+    
+          sizes.forEach(s => {
+            let opt = document.createElement("option");
+            opt.text = s;
+            sizeBox.add(opt);
+          });
+    
+          sizeBox.onchange = e => selectedSize = e.target.value;
+    
+          // ADD TO CART
+          document.getElementById("qv-add").onclick = () => {
+    
+            const variant = product.variants.find(v =>
+              v.option1 === selectedColor &&
+              v.option2 === selectedSize
+            );
+    
+            if (!variant) return;
+    
+            fetch("/cart/add.js", {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify({
+                id: variant.id,
+                quantity: 1
+              })
+            });
+    
+          };
+    
+        });
+    
+      });
+    
+      // CLOSE MODAL
+      document.querySelector(".qv-close").onclick = () => {
+        modal.style.display = "none";
+      };
+    
     });
 
-  });
-
-});
 </script>
 
