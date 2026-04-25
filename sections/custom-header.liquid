@@ -1,44 +1,64 @@
-<header class="custom-header">
+<header class="custom-header" id="customHeader">
   <div class="header-wrapper">
 
     <!-- LEFT: LOGO -->
     <div class="header-left">
-      {% if section.settings.logo != blank %}
-        <a href="/">
-          <img src="{{ section.settings.logo | image_url }}"  alt="logo" class="header-logo" >
-        </a>
-      {% else %}
-        <a href="/" class="logo-text">{{ shop.name }}</a>
-      {% endif %}
+      <a href="/">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url }}" class="header-logo" alt="logo">
+        {% else %}
+          {{ shop.name }}
+        {% endif %}
+      </a>
     </div>
 
-    <!-- CENTER: CONTENT -->
-    <div class="header-center">
-      {% if section.settings.center_text != blank %}
-        <p>{{ section.settings.center_text }}</p>
-      {% endif %}
-    </div>
+    <!-- CENTER: MENU -->
+    <nav class="header-center desktop-menu">
+      <ul>
+        {% for link in section.settings.menu.links %}
+          <li>
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
 
     <!-- RIGHT: BUTTON -->
     <div class="header-right">
       {% if section.settings.button_text != blank %}
         <a href="{{ section.settings.button_link }}" class="header-btn">
-          <span class="btn-text">{{ section.settings.button_text }}</span>
+          <span>{{ section.settings.button_text }}</span>
 
           {% if section.settings.arrow_icon != blank %}
-            <img  src="{{ section.settings.arrow_icon | image_url }}"  alt="arrow" class="btn-arrow" >
+            <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow" alt="arrow">
           {% endif %}
         </a>
       {% endif %}
     </div>
 
-    <!-- MOBILE MENU ICON -->
-    <div class="mobile-toggle">
+    <!-- MOBILE TOGGLE -->
+    <div class="mobile-toggle" id="mobileToggle">
       ☰
     </div>
 
   </div>
 </header>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <span>Menu</span>
+    <button id="closeMenu">✕</button>
+  </div>
+
+  <ul>
+    {% for link in section.settings.menu.links %}
+      <li>
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
 
 {% schema %}
 {
@@ -50,10 +70,9 @@
       "label": "Logo"
     },
     {
-      "type": "text",
-      "id": "center_text",
-      "label": "Center Content",
-      "default": "Welcome to our store"
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
     },
     {
       "type": "text",
@@ -82,84 +101,69 @@
 
 <style>
 /* ========================= */
-/* HEADER BASE */
+/* HEADER */
 /* ========================= */
 
 .custom-header {
-  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
   padding: 15px 40px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  transition: 0.3s;
 }
 
 .header-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
 }
 
-/* ========================= */
-/* LEFT (LOGO) */
-/* ========================= */
-
+/* LOGO */
 .header-logo {
-  max-height: 50px;
+  height: 45px;
 }
 
-.logo-text {
-  font-size: 22px;
-  font-weight: 600;
+/* MENU */
+.desktop-menu ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.desktop-menu a {
   text-decoration: none;
   color: #000;
+  font-size: 15px;
 }
 
-/* ========================= */
-/* CENTER */
-/* ========================= */
-
-.header-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
-.header-center p {
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-}
-
-/* ========================= */
-/* RIGHT BUTTON */
-/* ========================= */
-
+/* BUTTON */
 .header-btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 22px;
+  gap: 10px;
+  padding: 10px 20px;
   background: #000;
   color: #fff;
   text-decoration: none;
-  font-size: 14px;
   position: relative;
   overflow: hidden;
   z-index: 1;
-  transition: color 0.3s ease;
 }
 
-/* Left → Right fill animation */
+/* hover fill */
 .header-btn::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
   width: 0%;
   height: 100%;
   background: #FFF544;
-  transition: width 0.4s ease;
+  left: 0;
+  top: 0;
+  transition: 0.4s;
   z-index: -1;
 }
 
@@ -171,58 +175,86 @@
   color: #000;
 }
 
-/* Arrow */
+/* arrow */
 .btn-arrow {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  transition: all 0.3s ease;
-  filter: invert(0);
+  width: 16px;
+  transition: 0.3s;
 }
 
-/* Arrow hover */
 .header-btn:hover .btn-arrow {
-  transform: translateX(6px);
-  filter: invert(1);
+  transform: translateX(5px);
 }
 
-/* ========================= */
-/* MOBILE */
-/* ========================= */
-
+/* MOBILE TOGGLE */
 .mobile-toggle {
   display: none;
-  font-size: 22px;
+  font-size: 24px;
   cursor: pointer;
 }
 
-/* ========================= */
-/* RESPONSIVE */
-/* ========================= */
-
-@media (max-width: 1024px) {
-  .custom-header {
-    padding: 15px 20px;
-  }
-
-  .header-center p {
-    font-size: 14px;
-  }
+/* MOBILE MENU */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+  transition: 0.4s;
+  z-index: 9999;
 }
 
+.mobile-menu.active {
+  right: 0;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.mobile-menu li {
+  margin: 20px 0;
+}
+
+.mobile-menu a {
+  text-decoration: none;
+  font-size: 18px;
+  color: #000;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-
-  .header-center {
-    display: none;
-  }
-
-  .header-btn {
+  .desktop-menu,
+  .header-right {
     display: none;
   }
 
   .mobile-toggle {
     display: block;
   }
-
 }
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const openBtn = document.getElementById("mobileToggle");
+  const closeBtn = document.getElementById("closeMenu");
+  const menu = document.getElementById("mobileMenu");
+
+  openBtn.addEventListener("click", () => {
+    menu.classList.add("active");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
+  });
+});
+</script>
