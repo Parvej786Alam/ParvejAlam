@@ -126,35 +126,34 @@
       font-size: 14px;
     }
     .header-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  background: #FFF544;
-  color: #000;
-  text-decoration: none;
-  overflow: hidden;
-  text-transform: uppercase;
-  z-index: 1;
-}
-
-.header-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #000;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s ease;
-  z-index: -1;
-}
-.header-btn:hover{
-    color: #fff;
-}
-.header-btn:hover::before {
-  transform: scaleX(1);
-}
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: #FFF544;
+      color: #000;
+      text-decoration: none;
+      overflow: hidden;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+    .header-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #000;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: -1;
+    }
+    .header-btn:hover{
+        color: #fff;
+    }
+    .header-btn:hover::before {
+      transform: scaleX(1);
+    }
     .btn-arrow {
       width: 16px;
       filter: invert(1);
