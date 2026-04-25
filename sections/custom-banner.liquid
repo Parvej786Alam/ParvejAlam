@@ -48,7 +48,7 @@
 {% endschema %}
 
 <style>
-    .custom-banner {
+.custom-banner {
   position: relative;
   width: 100%;
   height: 80vh;
@@ -61,20 +61,6 @@
   background-position: center;
   background-repeat: no-repeat;
   color: #fff;
-}
-
-/* Overlay for better text visibility */
-.custom-banner::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.2),
-    transparent
-  );
-  z-index: 1;
 }
 
 .custom-banner .container {
