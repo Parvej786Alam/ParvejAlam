@@ -133,13 +133,13 @@
   position: relative;
 }
 
-/* LOGO FIXED */
+/* LOGO */
 .header-logo {
   max-height: 40px;
   width: auto;
 }
 
-/* CENTER */
+/* CENTER (DESKTOP) */
 .header-center {
   position: absolute;
   left: 50%;
@@ -183,7 +183,7 @@
   z-index: 1;
 }
 
-/* hover animation */
+/* Hover */
 .header-btn::before {
   content: "";
   position: absolute;
@@ -204,7 +204,7 @@
   color: #fff;
 }
 
-/* ARROW */
+/* Arrow */
 .btn-arrow {
   width: 16px;
   transition: 0.3s;
@@ -261,38 +261,41 @@
   color: #000;
 }
 
-/* RESPONSIVE */
+/* ========================= */
+/* 📱 MOBILE FIXED VERSION */
+/* ========================= */
 @media (max-width: 768px) {
 
+  .custom-header {
+    padding: 12px 15px;
+  }
+
+  /* Flex layout instead of overlap */
   .header-wrapper {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
   }
 
-  /* Logo center */
+  /* Toggle LEFT */
+  .mobile-toggle {
+    display: block;
+  }
+
+  /* Logo CENTER */
   .header-left {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
 
-  /* Show toggle */
-  .mobile-toggle {
-    display: block;
-    position: absolute;
-    left: 15px;
-    z-index: 1001;
-  }
-
-  /* Show button on right */
+  /* Button RIGHT */
   .header-right {
     display: block;
-    position: absolute;
-    right: 15px;
   }
 
-  /* FIX: center content below header */
+  /* Center content BELOW header */
   .header-center {
-    display: block;
     position: static;
     transform: none;
     margin-top: 60px;
@@ -300,36 +303,15 @@
     width: 100%;
   }
 
-  /* Stack menu vertically */
-  .desktop-menu ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .desktop-menu a {
-    font-size: 16px;
-  }
-
-  /* Logo size fix */
-  .header-logo {
-    max-height: 32px;
-  }
-
+  /* Hide desktop menu (use drawer) */
   .desktop-menu {
     display: none;
   }
 
-  .mobile-toggle {
-    display: block;
-  }
-
+  /* Logo size */
   .header-logo {
     max-height: 32px;
   }
-
-  .header-left{
-    margin: 0 auto;
-   }
 }
 </style>
 
