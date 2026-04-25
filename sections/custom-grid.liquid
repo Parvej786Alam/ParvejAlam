@@ -1,0 +1,87 @@
+<section class="product-grid">
+  <div class="grid">
+    {% for block in section.blocks %}
+      {% assign product = all_products[block.settings.product] %}
+      
+      <div class="product-card" data-product-handle="{{ product.handle }}">
+        <img src="{{ product.featured_image | image_url }}" />
+        <h3>{{ product.title }}</h3>
+        <p>{{ product.price | money }}</p>
+      </div>
+
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Grid",
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}
+
+<script>>
+    document.querySelectorAll(".product-card").forEach(card => {
+  card.addEventListener("click", async () => {
+    const handle = card.dataset.productHandle;
+
+    const res = await fetch(`/products/${handle}.js`);
+    const product = await res.json();
+
+    document.getElementById("popup-title").innerText = product.title;
+    document.getElementById("popup-price").innerText = product.price / 100;
+
+    // Variants
+    let variantHTML = "";
+    product.variants.forEach(v => {
+      variantHTML += `
+        <button class="variant" data-id="${v.id}">
+          ${v.title}
+        </button>
+      `;
+    });
+
+    document.getElementById("popup-variants").innerHTML = variantHTML;
+
+    document.getElementById("product-popup").style.display = "block";
+  });
+});
+
+document.getElementById("add-to-cart").addEventListener("click", async () => {
+  const selectedVariant = document.querySelector(".variant.active").dataset.id;
+
+  await fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: selectedVariant,
+      quantity: 1
+    })
+  });
+
+  alert("Added to cart!");
+});
+
+if (variantTitle.includes("Black") && variantTitle.includes("Medium")) {
+  await fetch('/cart/add.js', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: SOFT_JACKET_VARIANT_ID,
+      quantity: 1
+    })
+  });
+}
+</script>
