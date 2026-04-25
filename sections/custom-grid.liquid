@@ -2,16 +2,33 @@
   <div class="grid">
     {% for block in section.blocks %}
       {% assign product = all_products[block.settings.product] %}
-      
-      <div class="product-card" data-product-handle="{{ product.handle }}">
-        <img src="{{ product.featured_image | image_url }}" />
-        <h3>{{ product.title }}</h3>
-        <p>{{ product.price | money }}</p>
-      </div>
+
+      {% if product != blank %}
+        <div class="product-card" data-product-handle="{{ product.handle }}">
+          <img src="{{ product.featured_image | image_url: width: 500 }}" alt="{{ product.title }}">
+          <h3>{{ product.title }}</h3>
+          <p>{{ product.price | money }}</p>
+        </div>
+      {% endif %}
 
     {% endfor %}
   </div>
 </section>
+
+<!-- POPUP -->
+<div id="product-popup" style="display:none;">
+  <div class="popup-inner">
+    <h2 id="popup-title"></h2>
+    <p id="popup-price"></p>
+
+    <div id="popup-variants"></div>
+
+    <button id="add-to-cart">Add to Cart</button>
+    <button onclick="document.getElementById('product-popup').style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
 
 {% schema %}
 {
@@ -29,12 +46,20 @@
       ]
     }
   ],
+  "presets": [
+    {
+      "name": "Custom Grid"
+    }
+  ],
   "max_blocks": 6
 }
 {% endschema %}
 
-<script>>
-    document.querySelectorAll(".product-card").forEach(card => {
+<script>
+let selectedVariantId = null;
+
+// OPEN POPUP + LOAD PRODUCT
+document.querySelectorAll(".product-card").forEach(card => {
   card.addEventListener("click", async () => {
     const handle = card.dataset.productHandle;
 
@@ -42,13 +67,15 @@
     const product = await res.json();
 
     document.getElementById("popup-title").innerText = product.title;
-    document.getElementById("popup-price").innerText = product.price / 100;
+    document.getElementById("popup-price").innerText =
+      (product.price / 100).toFixed(2);
 
-    // Variants
+    // VARIANTS
     let variantHTML = "";
+
     product.variants.forEach(v => {
       variantHTML += `
-        <button class="variant" data-id="${v.id}">
+        <button class="variant-btn" data-id="${v.id}">
           ${v.title}
         </button>
       `;
@@ -56,32 +83,44 @@
 
     document.getElementById("popup-variants").innerHTML = variantHTML;
 
+    selectedVariantId = product.variants[0]?.id || null;
+
     document.getElementById("product-popup").style.display = "block";
   });
 });
 
+
+// SELECT VARIANT (EVENT DELEGATION)
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("variant-btn")) {
+    document.querySelectorAll(".variant-btn").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    e.target.classList.add("active");
+    selectedVariantId = e.target.dataset.id;
+  }
+});
+
+
+// ADD TO CART
 document.getElementById("add-to-cart").addEventListener("click", async () => {
-  const selectedVariant = document.querySelector(".variant.active").dataset.id;
+  if (!selectedVariantId) {
+    alert("Please select a variant");
+    return;
+  }
 
   await fetch('/cart/add.js', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
-      id: selectedVariant,
+      id: selectedVariantId,
       quantity: 1
     })
   });
 
   alert("Added to cart!");
 });
-
-if (variantTitle.includes("Black") && variantTitle.includes("Medium")) {
-  await fetch('/cart/add.js', {
-    method: 'POST',
-    body: JSON.stringify({
-      id: SOFT_JACKET_VARIANT_ID,
-      quantity: 1
-    })
-  });
-}
 </script>
