@@ -123,7 +123,7 @@
   height: 18px;
   object-fit: contain;
   transition: all 0.3s ease;
-  filter: invert(1); /* make arrow white initially */
+    filter: invert(0); /* arrow becomes black */
 }
 
 /* Hover (applies to BOTH text + arrow) */
@@ -135,7 +135,7 @@
 /* Arrow also changes on hover */
 .custom-banner .btn:hover .btn-arrow {
   transform: translateX(6px);
-  filter: invert(0); /* arrow becomes black */
+    filter: invert(1); /* make arrow white initially */
 }
 
 /* Shine effect */
