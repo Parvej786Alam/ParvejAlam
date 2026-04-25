@@ -311,6 +311,12 @@
     "custom_grid_DmaMyM": {
       "type": "custom-grid",
       "blocks": {
+        "product_M9D9HE": {
+          "type": "product",
+          "settings": {
+            "product": "black-leather-bag"
+          }
+        },
         "product_LH4rT3": {
           "type": "product",
           "settings": {
@@ -343,6 +349,7 @@
         }
       },
       "block_order": [
+        "product_M9D9HE",
         "product_LH4rT3",
         "product_9Kph6T",
         "product_6dt7Lw",
