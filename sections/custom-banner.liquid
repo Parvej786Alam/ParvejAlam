@@ -115,6 +115,25 @@
     text-transform: uppercase;
 }
 
+.custom-banner .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Arrow image */
+.custom-banner .btn-arrow {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Hover animation */
+.custom-banner .btn:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
 /* Button hover animation */
 .custom-banner .btn:hover {
   background-color: #000;
