@@ -212,38 +212,13 @@
   }
 }
 
-{% comment %} @media (max-width: 768px) {
-  .custom-banner {
-    padding: 30px 20px;
-    height: 60vh;
-  }
-  .custom-banner .container {
-    max-width: 300px;  
-   }
-
-  .custom-banner h1 {
-    font-size: 28px;
-  }
-
-  .custom-banner p {
-    font-size: 14px;
-  }
-
-  .custom-banner .btn {
-    padding: 12px 22px;
-    font-size: 14px;
-  }
-} {% endcomment %}
-
-
-
 /* Hide mobile layout on desktop */
 .mobile-banner {
   display: none;
 }
 
 /* ========================= */
-/* 📱 Mobile Layout */
+/*  Mobile Layout */
 /* ========================= */
 
 @media (max-width: 768px) {
@@ -286,12 +261,64 @@
     display: block;
   }
 
-  /* Button over image */
-  .mobile-btn {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    padding: 12px 20px;
-  }
+/* Button over image */
+.mobile-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 29px;
+  padding: 14px 25px 14px 55px;
+
+  background-color: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Background animation (LEFT → RIGHT) */
+.mobile-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: #FFF544;
+  transition: width 0.4s ease;
+  z-index: -1;
+}
+
+/* Arrow */
+.mobile-btn .btn-arrow {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: invert(1); /* white initially */
+}
+
+/* Hover */
+.mobile-btn:hover::before {
+  width: 100%;
+}
+
+.mobile-btn:hover {
+  color: #000;
+}
+
+/* Arrow hover */
+.mobile-btn:hover .btn-arrow {
+  transform: translateX(6px);
+  filter: invert(0); /* black on hover */
+}
+
 }
 </style>
