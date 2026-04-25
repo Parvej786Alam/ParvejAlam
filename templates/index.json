@@ -315,7 +315,7 @@
         "title": "Products",
         "collection": "frontpage",
         "product_count": 16,
-        "columns": 5,
+        "columns": 2,
         "gap": 16,
         "show_view_all": false
       }
