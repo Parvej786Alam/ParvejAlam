@@ -1,12 +1,10 @@
-<header class="custom-header" id="customHeader">
+<header class="custom-header">
   <div class="header-wrapper">
 
     <!-- MOBILE TOGGLE -->
-    <div class="mobile-toggle" id="mobileToggle">
-      ☰
-    </div>
+    <div class="mobile-toggle" id="mobileToggle">☰</div>
 
-    <!-- LEFT: LOGO -->
+    <!-- LOGO -->
     <div class="header-left">
       <a href="/">
         {% if section.settings.logo != blank %}
@@ -17,28 +15,14 @@
       </a>
     </div>
 
-    <!-- CENTER: TEXT + MENU -->
+    <!-- CENTER CONTENT -->
     <div class="header-center">
-
       {% if section.settings.center_text != blank %}
         <p class="center-text">{{ section.settings.center_text }}</p>
       {% endif %}
-
-      {% if section.settings.menu != blank %}
-        <nav class="desktop-menu">
-          <ul>
-            {% for link in section.settings.menu.links %}
-              <li>
-                <a href="{{ link.url }}">{{ link.title }}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
-      {% endif %}
-
     </div>
 
-    <!-- RIGHT: BUTTON -->
+    <!-- BUTTON -->
     <div class="header-right">
       {% if section.settings.button_text != blank %}
         <a href="{{ section.settings.button_link }}" class="header-btn">
@@ -53,20 +37,27 @@
   </div>
 </header>
 
-<!-- MOBILE MENU -->
+<!-- MOBILE DRAWER -->
 <div class="mobile-menu" id="mobileMenu">
+
   <div class="mobile-menu-header">
     <span>Menu</span>
     <button id="closeMenu">✕</button>
   </div>
 
-  <ul>
-    {% for link in section.settings.menu.links %}
-      <li>
-        <a href="{{ link.url }}">{{ link.title }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  {% if section.settings.center_text != blank %}
+    <p class="mobile-center-text">{{ section.settings.center_text }}</p>
+  {% endif %}
+
+  {% if section.settings.button_text != blank %}
+    <a href="{{ section.settings.button_link }}" class="mobile-btn">
+      <span>{{ section.settings.button_text }}</span>
+      {% if section.settings.arrow_icon != blank %}
+        <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow" alt="arrow">
+      {% endif %}
+    </a>
+  {% endif %}
+
 </div>
 
 {% schema %}
@@ -115,17 +106,14 @@
 {% endschema %}
 
 <style>
-/* HEADER */
 .custom-header {
   position: sticky;
   top: 0;
   z-index: 999;
   background: #F5F5F5;
-  backdrop-filter: blur(10px);
   padding: 15px 40px;
 }
 
-/* LAYOUT */
 .header-wrapper {
   display: flex;
   align-items: center;
@@ -133,13 +121,11 @@
   position: relative;
 }
 
-/* LOGO FIXED */
 .header-logo {
   max-height: 40px;
-  width: auto;
 }
 
-/* CENTER */
+/* CENTER DESKTOP */
 .header-center {
   position: absolute;
   left: 50%;
@@ -147,25 +133,7 @@
   text-align: center;
 }
 
-/* CENTER TEXT */
 .center-text {
-  font-size: 13px;
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-
-/* MENU */
-.desktop-menu ul {
-  display: flex;
-  gap: 25px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.desktop-menu a {
-  text-decoration: none;
-  color: #000;
   font-size: 14px;
 }
 
@@ -175,23 +143,19 @@
   align-items: center;
   gap: 10px;
   padding: 10px 20px;
-  background:#FFF544;
+  background: #FFF544;
   color: #000;
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  z-index: 1;
 }
 
-/* hover animation */
 .header-btn::before {
   content: "";
   position: absolute;
   width: 0%;
   height: 100%;
   background: #000;
-  left: 0;
-  top: 0;
   transition: 0.4s;
   z-index: -1;
 }
@@ -204,11 +168,10 @@
   color: #fff;
 }
 
-/* ARROW */
 .btn-arrow {
   width: 16px;
-  transition: 0.3s;
   filter: invert(1);
+  transition: 0.3s;
 }
 
 .header-btn:hover .btn-arrow {
@@ -216,18 +179,18 @@
   filter: invert(0);
 }
 
-/* MOBILE TOGGLE */
+/* MOBILE */
 .mobile-toggle {
   display: none;
   font-size: 24px;
   cursor: pointer;
 }
 
-/* MOBILE MENU */
+/* DRAWER */
 .mobile-menu {
   position: fixed;
   top: 0;
-  right: -100%;
+  left: -100%;
   width: 80%;
   height: 100%;
   background: #fff;
@@ -237,7 +200,7 @@
 }
 
 .mobile-menu.active {
-  right: 0;
+  left: 0;
 }
 
 .mobile-menu-header {
@@ -246,90 +209,72 @@
   margin-bottom: 20px;
 }
 
-.mobile-menu ul {
-  list-style: none;
-  padding: 0;
+.mobile-center-text {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.mobile-menu li {
-  margin: 20px 0;
-}
-
-.mobile-menu a {
-  text-decoration: none;
-  font-size: 18px;
+/* MOBILE BUTTON */
+.mobile-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  background: #FFF544;
   color: #000;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-btn::before {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background: #000;
+  transition: 0.4s;
+  z-index: -1;
+}
+
+.mobile-btn:hover::before {
+  width: 100%;
+}
+
+.mobile-btn:hover {
+  color: #fff;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
 
-  .header-wrapper {
-    justify-content: space-between;
+  .custom-header {
+    padding: 12px 15px;
   }
 
-  /* Logo center */
+  .mobile-toggle {
+    display: block;
+  }
+
   .header-left {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
 
-  /* Show toggle */
-  .mobile-toggle {
-    display: block;
-    position: absolute;
-    left: 15px;
-    z-index: 1001;
-  }
-
-  /* Show button on right */
   .header-right {
     display: block;
-    position: absolute;
-    right: 15px;
   }
 
-  /* FIX: center content below header */
   .header-center {
-    display: block;
-    position: static;
-    transform: none;
-    margin-top: 60px;
-    text-align: center;
-    width: 100%;
-  }
-
-  /* Stack menu vertically */
-  .desktop-menu ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .desktop-menu a {
-    font-size: 16px;
-  }
-
-  /* Logo size fix */
-  .header-logo {
-    max-height: 32px;
-  }
-
-  .desktop-menu {
     display: none;
   }
 
-  .mobile-toggle {
-    display: block;
-  }
-
   .header-logo {
     max-height: 32px;
   }
-
-  .header-left{
-    margin: 0 auto;
-   }
 }
 </style>
 
