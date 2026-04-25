@@ -1,23 +1,33 @@
-<div class="card">
+{% assign max_items = section.settings.max_products %}
 
-  <div class="img-wrap">
-    <img src="{{ product.featured_image | image_url }}" />
-  </div>
+<section class="grid">
 
-  <div class="meta">
-    <h3>{{ product.title }}</h3>
-    <p>{{ product.price | money }}</p>
-  </div>
+  {% for product in section.settings.collection.products limit: max_items %}
 
-  <button class="quick-view-btn" data-id="{{ product.id }}">
-    +
-  </button>
+    <div class="card">
 
-  <script type="application/json" id="product-data-{{ product.id }}">
-    {{ product | json }}
-  </script>
+      <div class="img-wrap">
+        <img src="{{ product.featured_image | image_url }}" />
+      </div>
 
-</div>
+      <div class="meta">
+        <h3>{{ product.title }}</h3>
+        <p>{{ product.price | money }}</p>
+      </div>
+
+      <button class="quick-view-btn" data-id="{{ product.id }}">
+        +
+      </button>
+
+      <script type="application/json" id="product-data-{{ product.id }}">
+        {{ product | json }}
+      </script>
+
+    </div>
+
+  {% endfor %}
+
+</section>
 
 {% schema %}
 {
