@@ -12,16 +12,26 @@
       </a>
     </div>
 
-    <!-- CENTER: MENU -->
-    <nav class="header-center desktop-menu">
-      <ul>
-        {% for link in section.settings.menu.links %}
-          <li>
-            <a href="{{ link.url }}">{{ link.title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </nav>
+    <!-- CENTER: TEXT + MENU -->
+    <div class="header-center">
+
+      {% if section.settings.center_text != blank %}
+        <p class="center-text">{{ section.settings.center_text }}</p>
+      {% endif %}
+
+      {% if section.settings.menu != blank %}
+        <nav class="desktop-menu">
+          <ul>
+            {% for link in section.settings.menu.links %}
+              <li>
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+
+    </div>
 
     <!-- RIGHT: BUTTON -->
     <div class="header-right">
@@ -70,6 +80,12 @@
       "label": "Logo"
     },
     {
+      "type": "text",
+      "id": "center_text",
+      "label": "Center Text",
+      "default": "Welcome to our store"
+    },
+    {
       "type": "link_list",
       "id": "menu",
       "label": "Menu"
@@ -100,10 +116,7 @@
 {% endschema %}
 
 <style>
-/* ========================= */
 /* HEADER */
-/* ========================= */
-
 .custom-header {
   position: sticky;
   top: 0;
@@ -111,24 +124,41 @@
   background: rgba(255,255,255,0.7);
   backdrop-filter: blur(10px);
   padding: 15px 40px;
-  transition: 0.3s;
 }
 
+/* LAYOUT */
 .header-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
-/* LOGO */
+/* LOGO FIXED */
 .header-logo {
-  height: 45px;
+  max-height: 40px;
+  width: auto;
+}
+
+/* CENTER */
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+/* CENTER TEXT */
+.center-text {
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
 /* MENU */
 .desktop-menu ul {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -137,7 +167,7 @@
 .desktop-menu a {
   text-decoration: none;
   color: #000;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 /* BUTTON */
@@ -154,7 +184,7 @@
   z-index: 1;
 }
 
-/* hover fill */
+/* hover animation */
 .header-btn::before {
   content: "";
   position: absolute;
@@ -175,7 +205,7 @@
   color: #000;
 }
 
-/* arrow */
+/* ARROW */
 .btn-arrow {
   width: 16px;
   transition: 0.3s;
@@ -232,13 +262,21 @@
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .desktop-menu,
+
+  .header-center {
+    display: none;
+  }
+
   .header-right {
     display: none;
   }
 
   .mobile-toggle {
     display: block;
+  }
+
+  .header-logo {
+    max-height: 32px;
   }
 }
 </style>
