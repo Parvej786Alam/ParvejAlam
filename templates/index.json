@@ -311,12 +311,6 @@
     "custom_grid_DmaMyM": {
       "type": "custom-grid",
       "blocks": {
-        "product_pgWbRt": {
-          "type": "product",
-          "settings": {
-            "product": "led-high-tops"
-          }
-        },
         "product_LH4rT3": {
           "type": "product",
           "settings": {
@@ -349,7 +343,6 @@
         }
       },
       "block_order": [
-        "product_pgWbRt",
         "product_LH4rT3",
         "product_9Kph6T",
         "product_6dt7Lw",
