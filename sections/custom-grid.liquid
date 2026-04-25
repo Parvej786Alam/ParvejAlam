@@ -1,57 +1,39 @@
-<section class="product-grid">
-  <div class="grid">
+<section class="future-shop">
+
+  <aside class="future-filter">
+    <input type="text" id="search" placeholder="Search universe...">
+    <input type="range" id="price" min="0" max="10000">
+  </aside>
+
+  <div class="future-grid">
 
     {% for block in section.blocks %}
       {% assign product = all_products[block.settings.product] %}
 
       {% if product != blank %}
-        <div class="product-card" data-handle="{{ product.handle }}">
 
-          <div class="img-box">
-            <img src="{{ product.featured_image | image_url: width: 700 }}">
-            <button class="quick-view">+</button>
-          </div>
+      <div class="future-card"
+           data-title="{{ product.title | downcase }}"
+           data-price="{{ product.price }}"
+           data-handle="{{ product.handle }}">
 
-          <div class="info">
-            <h3>{{ product.title }}</h3>
-            <p>{{ product.price | money }}</p>
-          </div>
-
+        <div class="future-img">
+          <img src="{{ product.featured_image | image_url: width: 800 }}">
+          <div class="orb">+</div>
         </div>
-      {% endif %}
 
+        <div class="future-info">
+          <h3>{{ product.title }}</h3>
+          <p>{{ product.price | money }}</p>
+        </div>
+
+      </div>
+
+      {% endif %}
     {% endfor %}
 
   </div>
 </section>
-
-
-<!-- DRAWER -->
-<div class="drawer-overlay" id="overlay"></div>
-
-<div class="product-drawer" id="drawer">
-
-  <button class="close-drawer" id="closeDrawer">×</button>
-
-  <div class="drawer-content">
-
-    <div class="gallery">
-      <img id="mainImg" />
-
-      <div class="thumbs" id="thumbs"></div>
-    </div>
-
-    <div class="details">
-      <h2 id="d-title"></h2>
-      <p id="d-price"></p>
-
-      <div class="swatches" id="swatches"></div>
-
-      <button id="addCart">Add to Cart</button>
-    </div>
-
-  </div>
-</div>
 
 {% schema %}
 {
@@ -79,219 +61,138 @@
 {% endschema %}
 
 <style>
+/* BACKGROUND */
+.future-shop{
+  display:flex;
+  gap:20px;
+  padding:40px;
+  background:radial-gradient(circle at top,#0b0f1a,#05070d);
+  color:#fff;
+  font-family:Arial;
+}
+
+/* FILTER */
+.future-filter{
+  width:240px;
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:15px;
+}
+
 /* GRID */
-.product-grid .grid{
+.future-grid{
+  flex:1;
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
+  grid-template-columns:repeat(4,1fr);
+  gap:25px;
 }
 
-.product-card{
-  border:1px solid #eee;
+/* CARD */
+.future-card{
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px;
   overflow:hidden;
-  background:#fff;
-height: fit-content;
-}
-
-.img-box{
+  transition:0.4s;
   position:relative;
 }
 
-.img-box img{
-  width:100%;
-  display:block;
+.future-card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 20px 50px rgba(0,255,255,0.15);
 }
 
-/* + BUTTON */
-.quick-view{
+/* IMAGE */
+.future-img{
+  position:relative;
+  aspect-ratio:1/1;
+  overflow:hidden;
+}
+
+.future-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:1s;
+}
+
+.future-card:hover img{
+  transform:scale(1.1) rotate(1deg);
+}
+
+/* ORB BUTTON */
+.orb{
   position:absolute;
   top:10px;
   right:10px;
-  width:36px;
-  height:36px;
+  width:40px;
+  height:40px;
   border-radius:50%;
-  border:none;
-  background:#000;
-  color:#fff;
-  cursor:pointer;
-  opacity:0;
-  transition:.3s;
-}
-
-.product-card:hover .quick-view{
-  opacity:1;
-}
-
-/* OVERLAY */
-.drawer-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  opacity:0;
-  visibility:hidden;
-  transition:.3s;
-}
-
-/* DRAWER */
-.product-drawer{
-  position:fixed;
-  top:0;
-  right:-500px;
-  width:450px;
-  height:100%;
-  background:#fff;
-  z-index:999;
-  transition:.5s;
-  padding:20px;
-  overflow-y:auto;
-}
-
-.product-drawer.active{
-  right:0;
-}
-
-.drawer-overlay.active{
-  opacity:1;
-  visibility:visible;
-}
-
-/* GALLERY */
-.gallery img{
-  width:100%;
-  border-radius:10px;
-}
-
-.thumbs{
+  background:linear-gradient(45deg,#00f5ff,#0066ff);
   display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-
-.thumbs img{
-  width:60px;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
   cursor:pointer;
-  border:1px solid #eee;
+  box-shadow:0 0 20px #00f5ff;
 }
 
-/* SWATCHES */
-.swatch{
-  width:25px;
-  height:25px;
-  border-radius:50%;
-  border:1px solid #ddd;
-  display:inline-block;
-  margin:5px;
-  cursor:pointer;
+/* INFO */
+.future-info{
+  padding:15px;
 }
 
-.swatch.active{
-  border:2px solid #000;
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .future-grid{grid-template-columns:repeat(3,1fr);}
 }
 
-/* BUTTON */
-#addCart{
-  width:100%;
-  padding:12px;
-  background:#000;
-  color:#fff;
-  border:none;
-  margin-top:15px;
-  cursor:pointer;
-}
-
-/* MOBILE */
 @media(max-width:768px){
-  .product-drawer{
-    width:100%;
-  }
+  .future-shop{flex-direction:column;}
+  .future-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+@media(max-width:480px){
+  .future-grid{grid-template-columns:1fr;}
 }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
 <script>
-let selectedVariant = null;
-let productData = null;
+const cards = document.querySelectorAll(".future-card");
 
-/* OPEN DRAWER */
-document.querySelectorAll(".quick-view").forEach(btn => {
-  btn.addEventListener("click", async (e) => {
+/* SEARCH */
+document.getElementById("search").addEventListener("input",(e)=>{
+  let val = e.target.value.toLowerCase();
 
+  cards.forEach(c=>{
+    c.style.display = c.dataset.title.includes(val) ? "block":"none";
+  });
+});
+
+/* PRICE */
+document.getElementById("price").addEventListener("input",(e)=>{
+  let max = e.target.value;
+
+  cards.forEach(c=>{
+    c.style.display = parseInt(c.dataset.price) <= max ? "block":"none";
+  });
+});
+
+/* CLICK EFFECT */
+document.querySelectorAll(".orb").forEach(orb=>{
+  orb.addEventListener("click",(e)=>{
     e.stopPropagation();
 
-    const handle = btn.closest(".product-card").dataset.handle;
+    const card = orb.closest(".future-card");
 
-    const res = await fetch(`/products/${handle}.js`);
-    productData = await res.json();
-
-    document.getElementById("d-title").innerText = productData.title;
-    document.getElementById("d-price").innerText = (productData.price/100).toFixed(2);
-
-    selectedVariant = productData.variants[0]?.id;
-
-    /* IMAGE GALLERY */
-    document.getElementById("mainImg").src = productData.images[0];
-
-    let thumbs = "";
-    productData.images.forEach(img=>{
-      thumbs += `<img src="${img}" onclick="document.getElementById('mainImg').src='${img}'">`;
-    });
-
-    document.getElementById("thumbs").innerHTML = thumbs;
-
-    /* SWATCHES */
-    let swatchHTML = "";
-
-    productData.variants.forEach(v=>{
-      let color = v.title.toLowerCase();
-
-      swatchHTML += `<span class="swatch" data-id="${v.id}" title="${v.title}"></span>`;
-    });
-
-    document.getElementById("swatches").innerHTML = swatchHTML;
-
-    openDrawer();
+    card.style.boxShadow = "0 0 40px #00f5ff";
+    setTimeout(()=>card.style.boxShadow="",500);
   });
 });
 
-/* OPEN DRAWER ANIMATION */
-function openDrawer(){
-  document.getElementById("drawer").classList.add("active");
-  document.getElementById("overlay").classList.add("active");
-
-  gsap.fromTo("#drawer",{x:500},{x:0,duration:0.4});
-}
-
-/* CLOSE */
-document.getElementById("closeDrawer").onclick = closeDrawer;
-document.getElementById("overlay").onclick = closeDrawer;
-
-function closeDrawer(){
-  document.getElementById("drawer").classList.remove("active");
-  document.getElementById("overlay").classList.remove("active");
-}
-
-/* SWATCH SELECT */
-document.addEventListener("click",(e)=>{
-  if(e.target.classList.contains("swatch")){
-    document.querySelectorAll(".swatch").forEach(s=>s.classList.remove("active"));
-    e.target.classList.add("active");
-    selectedVariant = e.target.dataset.id;
-  }
-});
-
-/* ADD TO CART */
-document.getElementById("addCart").addEventListener("click", async ()=>{
-
-  await fetch('/cart/add.js',{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      id:selectedVariant,
-      quantity:1
-    })
-  });
-
-  alert("Added to cart!");
-});
 </script>
