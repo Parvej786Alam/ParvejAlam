@@ -1,12 +1,6 @@
 <section style="background: {{ section.settings.bg_color }}; padding: 60px 20px;">
   <div style="max-width: 900px; margin: auto; text-align: center;">
 
-    {% if section.settings.title != blank %}
-      <h2 style="color: {{ section.settings.text_color }}; font-size: 32px; margin-bottom: 20px;">
-        {{ section.settings.title }}
-      </h2>
-    {% endif %}
-
     {% if section.settings.content != blank %}
       <div style="color: {{ section.settings.text_color }}; font-size: 16px; line-height: 1.6;">
         {{ section.settings.content }}
@@ -20,12 +14,6 @@
 {
   "name": "Simple Content Section",
   "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Your Heading Here"
-    },
     {
       "type": "textarea",
       "id": "content",
