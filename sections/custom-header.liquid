@@ -45,19 +45,21 @@
     <span>TISSO VISON</span>
   </div>
 
-  {% if section.settings.center_text != blank %}
-    <p class="mobile-center-text">{{ section.settings.center_text }}</p>
-  {% endif %}
-
-   <div class="mobile-menu-content">
-    {% if section.settings.button_text != blank %}
-      <a href="{{ section.settings.button_link }}" class="header-btn mobile-btn">
-        <span>{{ section.settings.button_text }}</span>
-        {% if section.settings.arrow_icon != blank %}
-          <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow" alt="arrow">
-        {% endif %}
-      </a>
+  <div class="mobile-box">
+    {% if section.settings.center_text != blank %}
+      <p class="mobile-center-text">{{ section.settings.center_text }}</p>
     {% endif %}
+  
+     <div class="mobile-menu-content">
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="header-btn mobile-btn">
+          <span>{{ section.settings.button_text }}</span>
+          {% if section.settings.arrow_icon != blank %}
+            <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow" alt="arrow">
+          {% endif %}
+        </a>
+      {% endif %}
+    </div>
   </div>
 
 </div>
