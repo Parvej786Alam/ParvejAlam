@@ -212,7 +212,7 @@
   }
 }
 
-@media (max-width: 768px) {
+{% comment %} @media (max-width: 768px) {
   .custom-banner {
     padding: 30px 20px;
     height: 60vh;
@@ -233,18 +233,7 @@
     padding: 12px 22px;
     font-size: 14px;
   }
-}
-
-@media (max-width: 480px) {
-  .custom-banner {
-    height: 55vh;
-    padding: 20px 15px;
-  }
-
-  .custom-banner h1 {
-    font-size: 24px;
-  }
-}
+} {% endcomment %}
 
 
 
@@ -281,8 +270,11 @@
     }
 
   .mobile-content p {
-    font-size: 14px;
+    font-size: 16px;
     color: #000;
+    width: 90%;
+    line-height: 130%;
+    margin: 0 auto;
   }
 
   .mobile-image {
