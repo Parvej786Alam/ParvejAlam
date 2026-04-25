@@ -388,8 +388,23 @@
           style="{{ style | strip }}"
         {%- endif -%}
       >
+        {% comment %} <div class="header__columns spacing-style">
+          {{ content }}
+        </div> {% endcomment %}
         <div class="header__columns spacing-style">
           {{ content }}
+          {% if section.settings.center_text != blank %}
+            <div class="custom-header-center">
+              {{ section.settings.center_text }}
+            </div>
+          {% endif %}
+          {% if section.settings.header_button_text != blank %}
+            <div class="custom-header-btn">
+              <a href="{{ section.settings.header_button_link }}">
+                {{ section.settings.header_button_text }}
+              </a>
+            </div>
+          {% endif %}
         </div>
       </div>
     {% endif %}
