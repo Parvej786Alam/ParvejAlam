@@ -1,34 +1,40 @@
 <section class="product-grid">
   <div class="grid">
+
     {% for block in section.blocks %}
       {% assign product = all_products[block.settings.product] %}
 
       {% if product != blank %}
-        <div class="product-card" data-product-handle="{{ product.handle }}">
-          <img src="{{ product.featured_image | image_url: width: 500 }}" alt="{{ product.title }}">
-          <h3>{{ product.title }}</h3>
-          <p>{{ product.price | money }}</p>
+        <div class="product-card" data-handle="{{ product.handle }}">
+
+          <!-- IMAGE WRAPPER -->
+          <div class="img-box">
+            <img src="{{ product.featured_image | image_url: width: 600 }}" />
+
+            <!-- PLUS ICON -->
+            <div class="plus-icon">+</div>
+          </div>
+
+          <!-- INFO -->
+          <div class="info">
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.price | money }}</p>
+          </div>
+
+          <!-- INLINE DETAIL PANEL -->
+          <div class="detail-panel">
+            <div class="variant-box"></div>
+
+            <button class="add-btn">Add to Cart</button>
+          </div>
+
         </div>
       {% endif %}
 
     {% endfor %}
+
   </div>
 </section>
-
-<!-- POPUP -->
-<div id="product-popup" style="display:none;">
-  <div class="popup-inner">
-    <h2 id="popup-title"></h2>
-    <p id="popup-price"></p>
-
-    <div id="popup-variants"></div>
-
-    <button id="add-to-cart">Add to Cart</button>
-    <button onclick="document.getElementById('product-popup').style.display='none'">
-      Close
-    </button>
-  </div>
-</div>
 
 {% schema %}
 {
@@ -55,72 +61,165 @@
 }
 {% endschema %}
 
-<script>
-let selectedVariantId = null;
+<style>
+    .product-grid .grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
 
-// OPEN POPUP + LOAD PRODUCT
+.product-card{
+  border:1px solid #eee;
+  background:#fff;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.product-card:hover{
+  transform:translateY(-5px);
+}
+
+/* IMAGE */
+.img-box{
+  position:relative;
+}
+
+.img-box img{
+  width:100%;
+  display:block;
+}
+
+/* PLUS ICON */
+.plus-icon{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:30px;
+  height:30px;
+  background:#000;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  font-size:18px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.product-card:hover .plus-icon{
+  opacity:1;
+}
+
+/* INFO */
+.info{
+  padding:10px;
+}
+
+/* DETAIL PANEL */
+.detail-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:0.4s ease;
+  padding:0 10px;
+}
+
+.product-card.active .detail-panel{
+  max-height:200px;
+  padding:10px;
+}
+
+.variant-btn{
+  padding:5px 10px;
+  border:1px solid #ddd;
+  margin:5px 5px 0 0;
+  cursor:pointer;
+}
+
+.variant-btn.active{
+  background:#000;
+  color:#fff;
+}
+
+.add-btn{
+  margin-top:10px;
+  padding:10px;
+  width:100%;
+  background:#000;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+</style>
+
+<script>
 document.querySelectorAll(".product-card").forEach(card => {
+
+  let selectedVariant = null;
+  let productData = null;
+
   card.addEventListener("click", async () => {
-    const handle = card.dataset.productHandle;
+
+    const handle = card.dataset.handle;
+
+    // toggle open/close (inline detail)
+    document.querySelectorAll(".product-card").forEach(c => {
+      if(c !== card) c.classList.remove("active");
+    });
+
+    card.classList.toggle("active");
+
+    if(productData) return;
 
     const res = await fetch(`/products/${handle}.js`);
-    const product = await res.json();
+    productData = await res.json();
 
-    document.getElementById("popup-title").innerText = product.title;
-    document.getElementById("popup-price").innerText =
-      (product.price / 100).toFixed(2);
+    let html = "";
 
-    // VARIANTS
-    let variantHTML = "";
-
-    product.variants.forEach(v => {
-      variantHTML += `
-        <button class="variant-btn" data-id="${v.id}">
-          ${v.title}
-        </button>
-      `;
+    productData.variants.forEach(v => {
+      html += `<button class="variant-btn" data-id="${v.id}">
+        ${v.title}
+      </button>`;
     });
 
-    document.getElementById("popup-variants").innerHTML = variantHTML;
+    card.querySelector(".variant-box").innerHTML = html;
 
-    selectedVariantId = product.variants[0]?.id || null;
-
-    document.getElementById("product-popup").style.display = "block";
+    selectedVariant = productData.variants[0]?.id;
   });
-});
 
 
-// SELECT VARIANT (EVENT DELEGATION)
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("variant-btn")) {
-    document.querySelectorAll(".variant-btn").forEach(btn => {
-      btn.classList.remove("active");
+  // variant select
+  card.addEventListener("click", (e) => {
+    if(e.target.classList.contains("variant-btn")){
+      card.querySelectorAll(".variant-btn").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      selectedVariant = e.target.dataset.id;
+    }
+  });
+
+
+  // add to cart
+  card.querySelector(".add-btn").addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    if(!selectedVariant){
+      alert("Select variant first");
+      return;
+    }
+
+    await fetch('/cart/add.js', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        id: selectedVariant,
+        quantity:1
+      })
     });
 
-    e.target.classList.add("active");
-    selectedVariantId = e.target.dataset.id;
-  }
-});
-
-
-// ADD TO CART
-document.getElementById("add-to-cart").addEventListener("click", async () => {
-  if (!selectedVariantId) {
-    alert("Please select a variant");
-    return;
-  }
-
-  await fetch('/cart/add.js', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id: selectedVariantId,
-      quantity: 1
-    })
+    alert("Added to cart!");
   });
 
-  alert("Added to cart!");
 });
 </script>
