@@ -313,7 +313,7 @@
       "type": "custom-grid",
       "name": "Custom Grid",
       "settings": {
-        "title": "Products",
+        "title": "Tisso vison in the wild",
         "collection": "frontpage",
         "product_count": 6,
         "columns": 2,
