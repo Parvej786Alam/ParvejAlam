@@ -310,54 +310,11 @@
     },
     "custom_grid_DmaMyM": {
       "type": "custom-grid",
-      "blocks": {
-        "product_M9D9HE": {
-          "type": "product",
-          "settings": {
-            "product": "black-leather-bag"
-          }
-        },
-        "product_LH4rT3": {
-          "type": "product",
-          "settings": {
-            "product": "dark-denim-top"
-          }
-        },
-        "product_9Kph6T": {
-          "type": "product",
-          "settings": {
-            "product": "classic-varsity-top"
-          }
-        },
-        "product_6dt7Lw": {
-          "type": "product",
-          "settings": {
-            "product": "chequered-red-shirt"
-          }
-        },
-        "product_ULWQjp": {
-          "type": "product",
-          "settings": {
-            "product": "blue-silk-tuxedo"
-          }
-        },
-        "product_EWjUjL": {
-          "type": "product",
-          "settings": {
-            "product": "black-leather-bag"
-          }
-        }
-      },
-      "block_order": [
-        "product_M9D9HE",
-        "product_LH4rT3",
-        "product_9Kph6T",
-        "product_6dt7Lw",
-        "product_ULWQjp",
-        "product_EWjUjL"
-      ],
       "name": "Custom Grid",
-      "settings": {}
+      "settings": {
+        "collection": "frontpage",
+        "max_products": 8
+      }
     }
   },
   "order": [
