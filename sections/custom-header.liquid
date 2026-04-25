@@ -1,0 +1,228 @@
+<header class="custom-header">
+  <div class="header-wrapper">
+
+    <!-- LEFT: LOGO -->
+    <div class="header-left">
+      {% if section.settings.logo != blank %}
+        <a href="/">
+          <img src="{{ section.settings.logo | image_url }}"  alt="logo" class="header-logo" >
+        </a>
+      {% else %}
+        <a href="/" class="logo-text">{{ shop.name }}</a>
+      {% endif %}
+    </div>
+
+    <!-- CENTER: CONTENT -->
+    <div class="header-center">
+      {% if section.settings.center_text != blank %}
+        <p>{{ section.settings.center_text }}</p>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT: BUTTON -->
+    <div class="header-right">
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="header-btn">
+          <span class="btn-text">{{ section.settings.button_text }}</span>
+
+          {% if section.settings.arrow_icon != blank %}
+            <img  src="{{ section.settings.arrow_icon | image_url }}"  alt="arrow" class="btn-arrow" >
+          {% endif %}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- MOBILE MENU ICON -->
+    <div class="mobile-toggle">
+      ☰
+    </div>
+
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Custom Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "center_text",
+      "label": "Center Content",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "arrow_icon",
+      "label": "Arrow Icon"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Header"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+/* ========================= */
+/* HEADER BASE */
+/* ========================= */
+
+.custom-header {
+  width: 100%;
+  padding: 15px 40px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* ========================= */
+/* LEFT (LOGO) */
+/* ========================= */
+
+.header-logo {
+  max-height: 50px;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #000;
+}
+
+/* ========================= */
+/* CENTER */
+/* ========================= */
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.header-center p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ========================= */
+/* RIGHT BUTTON */
+/* ========================= */
+
+.header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+/* Left → Right fill animation */
+.header-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: #FFF544;
+  transition: width 0.4s ease;
+  z-index: -1;
+}
+
+.header-btn:hover::before {
+  width: 100%;
+}
+
+.header-btn:hover {
+  color: #000;
+}
+
+/* Arrow */
+.btn-arrow {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: invert(0);
+}
+
+/* Arrow hover */
+.header-btn:hover .btn-arrow {
+  transform: translateX(6px);
+  filter: invert(1);
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+.mobile-toggle {
+  display: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 1024px) {
+  .custom-header {
+    padding: 15px 20px;
+  }
+
+  .header-center p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .header-center {
+    display: none;
+  }
+
+  .header-btn {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+}
+</style>
