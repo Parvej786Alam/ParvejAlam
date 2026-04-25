@@ -315,9 +315,9 @@
         "title": "Products",
         "collection": "frontpage",
         "product_count": 4,
-        "columns": 2,
+        "columns": 5,
         "gap": 16,
-        "show_view_all": true
+        "show_view_all": false
       }
     }
   },
