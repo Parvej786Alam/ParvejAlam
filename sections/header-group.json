@@ -112,6 +112,9 @@
         "enable_transparent_header_product": false,
         "product_color_scheme": "default",
         "enable_transparent_header_collection": false,
+        "center_text": "Find the ideal gift for your loved ones.",
+        "header_button_text": "choose gift",
+        "header_button_link": "#",
         "collection_color_scheme": "default"
       }
     }
