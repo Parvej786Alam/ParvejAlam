@@ -1,190 +1,274 @@
-{% for product in collections.frontpage.products %}
-  <div class="card">
+{% assign max_items = section.settings.max_products %}
 
-    <img src="{{ product.featured_image | image_url }}">
+<section class="figma-product-list">
 
-    <button class="open-modal" data-id="{{ product.id }}">
-      +
-    </button>
+  <div class="grid">
 
-    <!-- Hidden REAL product data -->
-    <div class="product-data" id="product-{{ product.id }}" style="display:none;">
-      <h2>{{ product.title }}</h2>
-      <p>{{ product.price | money }}</p>
-      <div class="desc">{{ product.description }}</div>
+    {% for product in section.settings.collection.products limit: max_items %}
 
-      <!-- Variants -->
-      {% for variant in product.variants %}
-        <div class="variant"
-             data-id="{{ variant.id }}"
-             data-title="{{ variant.title }}">
+      <div class="card">
+
+        <!-- REAL PRODUCT CARD (simple safe version) -->
+        <img src="{{ product.featured_image | image_url }}" />
+        <h3>{{ product.title }}</h3>
+        <p>{{ product.price | money }}</p>
+
+        <!-- QUICK VIEW -->
+        <button class="quick-view-btn" data-id="{{ product.id }}">
+          +
+        </button>
+
+        <!-- REAL DATA -->
+        <script type="application/json" id="product-data-{{ product.id }}">
+          {{ product | json }}
+        </script>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+</section>
+
+<!-- MODAL -->
+<div id="qv-modal" class="qv-modal">
+  <div class="qv-box">
+
+    <span class="qv-close">&times;</span>
+
+    <div class="qv-content">
+
+      <div class="qv-left">
+        <img id="qv-img">
+      </div>
+
+      <div class="qv-right">
+
+        <h2 id="qv-title"></h2>
+        <p id="qv-price"></p>
+        <div id="qv-desc"></div>
+
+        <div class="qv-option">
+          <label>Color</label>
+          <div id="qv-colors"></div>
         </div>
-      {% endfor %}
+
+        <div class="qv-option">
+          <label>Size</label>
+          <select id="qv-size"></select>
+        </div>
+
+        <button id="qv-add">ADD TO CART →</button>
+
+      </div>
+
     </div>
 
   </div>
-{% endfor %}
+</div>
 
 {% schema %}
 {
   "name": "Custom Grid",
-  "blocks": [
+  "settings": [
     {
-      "type": "product",
-      "name": "Product",
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Select Product"
-        }
-      ]
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "min": 1,
+      "max": 16,
+      "step": 1,
+      "default": 8,
+      "label": "Products"
     }
   ],
   "presets": [
     {
       "name": "Custom Grid"
     }
-  ],
-  "max_blocks": 6
+  ]
 }
 {% endschema %}
 
 <style>
-/* BACKGROUND */
-.future-shop{
-  display:flex;
-  gap:20px;
-  padding:40px;
-  background:radial-gradient(circle at top,#0b0f1a,#05070d);
-  color:#fff;
-  font-family:Arial;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
 }
 
-/* FILTER */
-.future-filter{
-  width:240px;
-  position:sticky;
-  top:20px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:15px;
+.card {
+  position: relative;
 }
 
-/* GRID */
-.future-grid{
-  flex:1;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:25px;
+.card img {
+  width: 100%;
+  display: block;
 }
 
-/* CARD */
-.future-card{
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:18px;
-  overflow:hidden;
-  transition:0.4s;
-  position:relative;
+.quick-view-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #000;
+  cursor: pointer;
 }
 
-.future-card:hover{
-  transform:translateY(-10px) scale(1.02);
-  box-shadow:0 20px 50px rgba(0,255,255,0.15);
+/* MODAL */
+.qv-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
-/* IMAGE */
-.future-img{
-  position:relative;
-  aspect-ratio:1/1;
-  overflow:hidden;
+.qv-box {
+  background: #fff;
+  width: 750px;
+  padding: 25px;
 }
 
-.future-img img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:1s;
+.qv-content {
+  display: flex;
+  gap: 20px;
 }
 
-.future-card:hover img{
-  transform:scale(1.1) rotate(1deg);
+.qv-left img {
+  width: 280px;
 }
 
-/* ORB BUTTON */
-.orb{
-  position:absolute;
-  top:10px;
-  right:10px;
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:linear-gradient(45deg,#00f5ff,#0066ff);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  cursor:pointer;
-  box-shadow:0 0 20px #00f5ff;
+.qv-right {
+  flex: 1;
 }
 
-/* INFO */
-.future-info{
-  padding:15px;
+.qv-option {
+  margin-top: 15px;
 }
 
-/* RESPONSIVE */
-@media(max-width:1024px){
-  .future-grid{grid-template-columns:repeat(3,1fr);}
+#qv-colors button {
+  margin-right: 8px;
+  border: 1px solid #000;
+  padding: 5px 10px;
+  background: white;
+  cursor: pointer;
 }
 
-@media(max-width:768px){
-  .future-shop{flex-direction:column;}
-  .future-grid{grid-template-columns:repeat(2,1fr);}
+#qv-add {
+  margin-top: 20px;
+  width: 100%;
+  background: black;
+  color: white;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
 }
 
-@media(max-width:480px){
-  .future-grid{grid-template-columns:1fr;}
+.qv-close {
+  float: right;
+  cursor: pointer;
 }
 </style>
 
 <script>
-document.querySelectorAll(".open-modal").forEach(btn => {
+document.querySelectorAll(".quick-view-btn").forEach(btn => {
+
   btn.addEventListener("click", () => {
+
     const id = btn.dataset.id;
 
-    const data = document.getElementById(`product-${id}`);
+    const product = JSON.parse(
+      document.getElementById(`product-data-${id}`).textContent
+    );
 
-    document.getElementById("modal-title").innerHTML =
-      data.querySelector("h2").innerHTML;
+    // BASIC DATA
+    document.getElementById("qv-title").innerText = product.title;
+    document.getElementById("qv-price").innerText =
+      (product.price / 100).toFixed(2);
 
-    document.getElementById("modal-price").innerHTML =
-      data.querySelector("p").innerHTML;
+    document.getElementById("qv-img").src =
+      product.images?.[0] || "";
 
-    document.getElementById("modal-desc").innerHTML =
-      data.querySelector(".desc").innerHTML;
+    document.getElementById("qv-desc").innerHTML =
+      product.description || "";
 
-    // variants
-    const variants = data.querySelectorAll(".variant");
-    let selected = variants[0].dataset.id;
+    // VARIANTS
+    let colors = new Set();
+    let sizes = new Set();
 
-    document.getElementById("add-to-cart").onclick = () => {
+    product.variants.forEach(v => {
+      let parts = v.title.split(" / ");
+      if (parts[0]) colors.add(parts[0]);
+      if (parts[1]) sizes.add(parts[1]);
+    });
+
+    const colorBox = document.getElementById("qv-colors");
+    const sizeBox = document.getElementById("qv-size");
+
+    colorBox.innerHTML = "";
+    sizeBox.innerHTML = "";
+
+    let selectedColor = "";
+    let selectedSize = "";
+
+    colors.forEach(c => {
+      const b = document.createElement("button");
+      b.innerText = c;
+      b.onclick = () => selectedColor = c;
+      colorBox.appendChild(b);
+    });
+
+    sizes.forEach(s => {
+      const opt = document.createElement("option");
+      opt.text = s;
+      sizeBox.add(opt);
+    });
+
+    selectedColor = product.variants[0]?.option1;
+    selectedSize = product.variants[0]?.option2;
+
+    sizeBox.onchange = e => selectedSize = e.target.value;
+
+    // ADD TO CART
+    document.getElementById("qv-add").onclick = () => {
+
+      const variant = product.variants.find(v =>
+        v.option1 === selectedColor &&
+        v.option2 === selectedSize
+      );
+
+      if (!variant) return;
+
       fetch("/cart/add.js", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-          id: selected,
+          id: variant.id,
           quantity: 1
         })
       });
+
     };
 
-    document.getElementById("modal").classList.remove("hidden");
+    document.getElementById("qv-modal").style.display = "flex";
   });
+
 });
+
+// CLOSE
+document.querySelector(".qv-close").onclick = () => {
+  document.getElementById("qv-modal").style.display = "none";
+};
 
 </script>
