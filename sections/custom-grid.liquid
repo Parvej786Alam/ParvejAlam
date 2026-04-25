@@ -1,71 +1,22 @@
-{% assign max_items = section.settings.max_products %}
+<div class="card">
 
-<section class="figma-product-list">
-
-  <div class="grid">
-
-    {% for product in section.settings.collection.products limit: max_items %}
-
-      <div class="card">
-
-        <!-- REAL PRODUCT CARD (simple safe version) -->
-        <img src="{{ product.featured_image | image_url }}" />
-        <h3>{{ product.title }}</h3>
-        <p>{{ product.price | money }}</p>
-
-        <!-- QUICK VIEW -->
-        <button class="quick-view-btn" data-id="{{ product.id }}">
-          +
-        </button>
-
-        <!-- REAL DATA -->
-        <script type="application/json" id="product-data-{{ product.id }}">
-          {{ product | json }}
-        </script>
-
-      </div>
-
-    {% endfor %}
-
+  <div class="img-wrap">
+    <img src="{{ product.featured_image | image_url }}" />
   </div>
 
-</section>
-
-<!-- MODAL -->
-<div id="qv-modal" class="qv-modal">
-  <div class="qv-box">
-
-    <span class="qv-close">&times;</span>
-
-    <div class="qv-content">
-
-      <div class="qv-left">
-        <img id="qv-img">
-      </div>
-
-      <div class="qv-right">
-
-        <h5 id="qv-title"></h5>
-        <p id="qv-price"></p>
-        <div id="qv-desc"></div>
-
-        <div class="qv-option">
-          <label>Color</label>
-          <div id="qv-colors"></div>
-        </div>
-
-        <div class="qv-option">
-          <label>Size</label>
-          <select id="qv-size"></select>
-        </div>
-
-        <button id="qv-add">ADD TO CART →</button>
-
-      </div>
-
-    </div>
-
+  <div class="meta">
+    <h3>{{ product.title }}</h3>
+    <p>{{ product.price | money }}</p>
   </div>
+
+  <button class="quick-view-btn" data-id="{{ product.id }}">
+    +
+  </button>
+
+  <script type="application/json" id="product-data-{{ product.id }}">
+    {{ product | json }}
+  </script>
+
 </div>
 
 {% schema %}
