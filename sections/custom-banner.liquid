@@ -114,7 +114,20 @@
   text-transform: uppercase;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* Background animation layer */
+.custom-banner .btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: #FFF544;
+  transition: width 0.4s ease;
+  z-index: -1;
 }
 
 /* Arrow */
@@ -123,37 +136,23 @@
   height: 18px;
   object-fit: contain;
   transition: all 0.3s ease;
-    filter: invert(0); /* arrow becomes black */
+  filter: invert(1); /* white initially */
 }
 
-/* Hover (applies to BOTH text + arrow) */
+/* Hover effect */
+.custom-banner .btn:hover::before {
+  width: 100%;
+}
+
 .custom-banner .btn:hover {
-  background: #FFF544;
   color: #000;
 }
 
-/* Arrow also changes on hover */
+/* Arrow hover */
 .custom-banner .btn:hover .btn-arrow {
   transform: translateX(6px);
-    filter: invert(1); /* make arrow white initially */
+  filter: invert(0); /* black on hover */
 }
-
-/* Shine effect */
-{% comment %} .custom-banner .btn::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: rgba(255,255,255,0.4);
-  transform: skewX(-25deg);
-  transition: 0.5s;
-}
-
-.custom-banner .btn:hover::after {
-  left: 130%;
-} {% endcomment %}
 
 /* ========================= */
 /* 📱 Responsive */
