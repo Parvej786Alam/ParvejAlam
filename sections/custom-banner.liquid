@@ -1,12 +1,34 @@
-<section class="custom-banner" style="background-image: url({{ section.settings.background_image | image_url }})">
+<!-- Desktop / Tablet Banner -->
+<section class="custom-banner desktop-banner" style="background-image: url({{ section.settings.background_image | image_url }})">
   <div class="container">
     <h1>{{ section.settings.heading }}</h1>
     <p>{{ section.settings.subheading }}</p>
+
     <a href="{{ section.settings.button_link }}" class="btn">
-        <span class="btn-text">{{ section.settings.button_text }}</span>
-        {% if section.settings.arrow_icon != blank %}
-          <img  src="{{ section.settings.arrow_icon | image_url }}"  alt="arrow"  class="btn-arrow" >
-        {% endif %}
+      <span>{{ section.settings.button_text }}</span>
+      {% if section.settings.arrow_icon != blank %}
+        <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow">
+      {% endif %}
+    </a>
+  </div>
+</section>
+
+
+<!-- Mobile Banner -->
+<section class="mobile-banner">
+  <div class="mobile-content">
+    <h1>{{ section.settings.heading }}</h1>
+    <p>{{ section.settings.subheading }}</p>
+  </div>
+
+  <div class="mobile-image">
+    <img src="{{ section.settings.background_image | image_url }}" alt="banner">
+
+    <a href="{{ section.settings.button_link }}" class="btn mobile-btn">
+      <span>{{ section.settings.button_text }}</span>
+      {% if section.settings.arrow_icon != blank %}
+        <img src="{{ section.settings.arrow_icon | image_url }}" class="btn-arrow">
+      {% endif %}
     </a>
   </div>
 </section>
