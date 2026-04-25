@@ -264,13 +264,60 @@
 /* RESPONSIVE */
 @media (max-width: 768px) {
 
-  {% comment %} .header-center {
-    display: none;
+  .header-wrapper {
+    justify-content: space-between;
   }
 
+  /* Logo center */
+  .header-left {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Show toggle */
+  .mobile-toggle {
+    display: block;
+    position: absolute;
+    left: 15px;
+    z-index: 1001;
+  }
+
+  /* Show button on right */
   .header-right {
+    display: block;
+    position: absolute;
+    right: 15px;
+  }
+
+  /* FIX: center content below header */
+  .header-center {
+    display: block;
+    position: static;
+    transform: none;
+    margin-top: 60px;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Stack menu vertically */
+  .desktop-menu ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .desktop-menu a {
+    font-size: 16px;
+  }
+
+  /* Logo size fix */
+  .header-logo {
+    max-height: 32px;
+  }
+
+  .desktop-menu {
     display: none;
-  } {% endcomment %}
+  }
 
   .mobile-toggle {
     display: block;
