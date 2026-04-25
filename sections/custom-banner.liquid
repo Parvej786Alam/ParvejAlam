@@ -136,7 +136,7 @@
   height: 18px;
   object-fit: contain;
   transition: all 0.3s ease;
-  filter: invert(1); /* white initially */
+  filter: invert(0); /* black on hover */
 }
 
 /* Hover effect */
@@ -151,7 +151,8 @@
 /* Arrow hover */
 .custom-banner .btn:hover .btn-arrow {
   transform: translateX(6px);
-  filter: invert(0); /* black on hover */
+    filter: invert(1); /* white initially */
+
 }
 
 /* ========================= */
