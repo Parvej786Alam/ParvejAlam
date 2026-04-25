@@ -314,7 +314,7 @@
       "settings": {
         "title": "Products",
         "collection": "frontpage",
-        "product_count": 16,
+        "product_count": 8,
         "columns": 2,
         "gap": 16,
         "show_view_all": false
