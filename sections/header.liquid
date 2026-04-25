@@ -1128,6 +1128,50 @@
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
   }
+
+
+  /* ========================= */
+  /*  Custom Header Add-ons */
+  /* ========================= */
+  
+  .custom-header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .custom-header-btn {
+    margin-left: auto;
+  }
+
+  .custom-header-btn a {
+    display: inline-block;
+    padding: 8px 18px;
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  /* Hover */
+  .custom-header-btn a:hover {
+    background: #FFF544;
+    color: #000;
+  }
+  
+  @media (max-width: 749px) {
+    .custom-header-center {
+      display: none;
+    }
+  
+    .custom-header-btn {
+      display: none;
+    }
+  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}
