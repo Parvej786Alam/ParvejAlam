@@ -416,13 +416,13 @@
     
           sizeBox.onchange = e => selectedSize = e.target.value;
     
-          // ADD TO CART
+          {% comment %} // ADD TO CART
           document.getElementById("qv-add").onclick = () => {
     
-            const variant = product.variants.find(v =>
-              v.option1 === selectedColor &&
-              v.option2 === selectedSize
-            );
+            const variant = product.variants.find(v => {
+              return (!selectedColor || v.option1 === selectedColor) &&
+                     (!selectedSize || v.option2 === selectedSize);
+            });
     
             if (!variant) return;
     
@@ -435,7 +435,50 @@
               })
             });
     
-          };
+          }; {% endcomment %}
+
+          document.getElementById("qv-add").onclick = async () => {
+
+  const variant = product.variants.find(v =>
+    (!selectedColor || v.option1 === selectedColor) &&
+    (!selectedSize || v.option2 === selectedSize)
+  );
+
+  if (!variant) {
+    alert("Please select available options");
+    return;
+  }
+
+  try {
+    const res = await fetch("/cart/add.js", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: variant.id,
+        quantity: 1
+      })
+    });
+
+    if (!res.ok) throw new Error("Add to cart failed");
+
+    const data = await res.json();
+
+    console.log("Added:", data);
+
+    // UX FEEDBACK
+    document.getElementById("qv-add").innerText = "ADDED ✓";
+
+    // Optional: open cart drawer or redirect
+    // window.location.href = "/cart";
+
+  } catch (err) {
+    console.error(err);
+    alert("Error adding to cart");
+  }
+
+};
     
         });
     
