@@ -76,6 +76,49 @@
   <button type="submit">Add to cart</button>
 </form>
 
+
+
+
+
+<div id="qv-modal" class="qv-modal">
+  <div class="qv-box">
+
+    <span class="qv-close">×</span>
+
+    <div class="qv-grid">
+
+      <div class="qv-left">
+        <img id="qv-img">
+        <div class="content-box">
+          <h5 id="qv-title"></h5>
+          <p id="qv-price"></p>
+          <p id="qv-desc"></p>
+        </div>
+      </div>
+
+      <div class="qv-right">
+
+        <div class="qv-option">
+          <label>Size</label>
+          <select id="qv-size"></select>
+        </div>
+
+        <div class="qv-option">
+          <label>Color</label>
+          <div id="qv-colors"></div>
+        </div>
+
+        <!-- ✅ REAL SHOPIFY FORM -->
+        <form id="qv-form" method="post" action="/cart/add">
+          <input type="hidden" name="id" id="qv-variant-id">
+          <button type="submit" class="a-btn">ADD TO CART</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
   </div>
@@ -367,70 +410,108 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    
-      const modal = document.getElementById("qv-modal");
-    
-      document.querySelectorAll(".qv-btn").forEach(btn => {
-    
-        btn.addEventListener("click", () => {
-    
-          const product = JSON.parse(
-            document.getElementById(`product-data-${btn.dataset.id}`).textContent
-          );
-    
-          // OPEN MODAL
-          modal.style.display = "flex";
-    
-          // BASIC DATA
-          document.getElementById("qv-title").innerText = product.title;
-          document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
-          document.getElementById("qv-img").src = product.images?.[0] || "";
-          document.getElementById("qv-desc").innerHTML = product.description.substring(0, 50) + "...";
-    
-          // VARIANTS
-          let colors = new Set();
-          let sizes = new Set();
-    
-          product.variants.forEach(v => {
-            let parts = v.title.split(" / ");
-            if (parts[0]) colors.add(parts[0]);
-            if (parts[1]) sizes.add(parts[1]);
-          });
-    
-          const colorBox = document.getElementById("qv-colors");
-          const sizeBox = document.getElementById("qv-size");
-    
-          colorBox.innerHTML = "";
-          sizeBox.innerHTML = "";
-    
-          let selectedColor = product.variants[0]?.option1;
-          let selectedSize = product.variants[0]?.option2;
-    
-          colors.forEach(c => {
-            let b = document.createElement("button");
-            b.innerText = c;
-            b.onclick = () => selectedColor = c;
-            colorBox.appendChild(b);
-          });
-    
-          sizes.forEach(s => {
-            let opt = document.createElement("option");
-            opt.text = s;
-            sizeBox.add(opt);
-          });
-    
-          sizeBox.onchange = e => selectedSize = e.target.value;
-    
-        });
-    
+
+  const modal = document.getElementById("qv-modal");
+
+  document.querySelectorAll(".qv-btn").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+      const product = JSON.parse(
+        document.getElementById(`product-data-${btn.dataset.id}`).textContent
+      );
+
+      modal.style.display = "flex";
+
+      // BASIC DATA
+      document.getElementById("qv-title").innerText = product.title;
+      document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
+      document.getElementById("qv-img").src = product.images?.[0] || "";
+      document.getElementById("qv-desc").innerHTML =
+        (product.description || "").substring(0, 80) + "...";
+
+      // VARIANTS
+      const colorBox = document.getElementById("qv-colors");
+      const sizeBox = document.getElementById("qv-size");
+
+      colorBox.innerHTML = "";
+      sizeBox.innerHTML = "";
+
+      let selectedColor = null;
+      let selectedSize = null;
+
+      let colors = new Set();
+      let sizes = new Set();
+
+      product.variants.forEach(v => {
+        if (v.option1) colors.add(v.option1);
+        if (v.option2) sizes.add(v.option2);
       });
-    
-      // CLOSE MODAL
-      document.querySelector(".qv-close").onclick = () => {
-        modal.style.display = "none";
+
+      // 👉 variant updater
+      function updateVariantId() {
+        const variant = product.variants.find(v => {
+          return (!selectedColor || v.option1 === selectedColor) &&
+                 (!selectedSize || v.option2 === selectedSize);
+        }) || product.variants[0];
+
+        document.getElementById("qv-variant-id").value = variant.id;
+      }
+
+      // COLORS
+      colors.forEach((c, index) => {
+        let b = document.createElement("button");
+        b.type = "button";
+        b.innerText = c;
+
+        if (index === 0) {
+          selectedColor = c;
+          b.classList.add("active");
+        }
+
+        b.onclick = () => {
+          selectedColor = c;
+
+          document.querySelectorAll("#qv-colors button")
+            .forEach(btn => btn.classList.remove("active"));
+
+          b.classList.add("active");
+
+          updateVariantId();
+        };
+
+        colorBox.appendChild(b);
+      });
+
+      // SIZES
+      sizes.forEach((s, index) => {
+        let opt = document.createElement("option");
+        opt.value = s;
+        opt.text = s;
+
+        if (index === 0) selectedSize = s;
+
+        sizeBox.appendChild(opt);
+      });
+
+      sizeBox.onchange = e => {
+        selectedSize = e.target.value;
+        updateVariantId();
       };
-    
+
+      // INIT
+      updateVariantId();
+
     });
+
+  });
+
+  // CLOSE
+  document.querySelector(".qv-close").onclick = () => {
+    modal.style.display = "none";
+  };
+
+});
 
 </script>
 
