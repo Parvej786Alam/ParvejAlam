@@ -380,7 +380,7 @@
           document.getElementById("qv-title").innerText = product.title;
           document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
           document.getElementById("qv-img").src = product.images?.[0] || "";
-          document.getElementById("qv-desc").innerHTML = product.description.substring(0, 150) + "...";
+          document.getElementById("qv-desc").innerHTML = product.description.substring(0, 50) + "...";
     
           // VARIANTS
           let colors = new Set();
