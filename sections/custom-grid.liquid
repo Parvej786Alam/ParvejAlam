@@ -69,8 +69,7 @@
           <div id="qv-colors"></div>
         </div>
 
-        <button id="qv-add">ADD TO CART</button>
-        <a href="/cart">ADD TO CART</a>
+        <a class="a-btn" href="/cart">ADD TO CART</a>
 
       </div>
     </div>
@@ -273,7 +272,7 @@
       cursor: pointer;
     }
     
-    #qv-add {
+    .a-btn {
       margin-top: 20px;
       width: 100%;
       background: black;
@@ -416,27 +415,6 @@
           });
     
           sizeBox.onchange = e => selectedSize = e.target.value;
-    
-          // ADD TO CART
-          document.getElementById("qv-add").onclick = () => {
-    
-            const variant = product.variants.find(v => {
-              return (!selectedColor || v.option1 === selectedColor) &&
-                     (!selectedSize || v.option2 === selectedSize);
-            });
-    
-            if (!variant) return;
-    
-            fetch("/cart/add.js", {
-              method: "POST",
-              headers: {"Content-Type": "application/json"},
-              body: JSON.stringify({
-                id: variant.id,
-                quantity: 1
-              })
-            });
-    
-          };
     
         });
     
