@@ -69,7 +69,12 @@
           <div id="qv-colors"></div>
         </div>
 
-        <a class="a-btn" href="cart">ADD TO CART</a>
+        {% comment %} <a class="a-btn" href="cart">ADD TO CART</a> {% endcomment %}
+
+        <form method="post" action="/cart/add">
+  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+  <button type="submit">Add to cart</button>
+</form>
 
       </div>
     </div>
