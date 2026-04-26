@@ -69,10 +69,9 @@
           <div id="qv-colors"></div>
         </div>
 
-        <button id="qv-add">ADD TO CART</button>
         {%  if settings.quick_add or settings.mobile_quick_add %}
-      {% render 'quick-add', product: product, section_id: section.id %}
-    {% endif %}
+        <button id="qv-add">ADD TO CART</button>
+        {% endif %}
 
       </div>
     </div>
