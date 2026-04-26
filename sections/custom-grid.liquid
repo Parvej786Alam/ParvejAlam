@@ -69,7 +69,9 @@
           <div id="qv-colors"></div>
         </div>
 
+        {%  if settings.quick_add or settings.mobile_quick_add %}
         <button id="qv-add">ADD TO CART</button>
+        {% endif %}
 
       </div>
     </div>
@@ -439,53 +441,53 @@
     
         }); {% endcomment %}
         document.getElementById("qv-add").onclick = async () => {
-
-  const button = document.getElementById("qv-add");
-  button.innerText = "ADDING...";
-
-  const variant = product.variants.find(v => {
-    return (!selectedColor || v.option1 === selectedColor) &&
-           (!selectedSize || v.option2 === selectedSize);
-  });
-
-  if (!variant) {
-    alert("Please select options");
-    button.innerText = "ADD TO CART";
-    return;
-  }
-
-  try {
-    const res = await fetch("/cart/add.js", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        id: variant.id,
-        quantity: 1
-      })
-    });
-
-    if (!res.ok) throw new Error("Failed");
-
-    const data = await res.json();
-
-    console.log("Added:", data);
-
-    // ✅ FEEDBACK
-    button.innerText = "ADDED ✓";
-
-    // ✅ OPTIONAL: open cart page
-    // window.location.href = "/cart";
-
-  } catch (err) {
-    console.error(err);
-    alert("Error adding to cart");
-    button.innerText = "ADD TO CART";
-  }
-
-};
+        
+          const button = document.getElementById("qv-add");
+          button.innerText = "ADDING...";
+        
+          const variant = product.variants.find(v => {
+            return (!selectedColor || v.option1 === selectedColor) &&
+                   (!selectedSize || v.option2 === selectedSize);
+          });
+        
+          if (!variant) {
+            alert("Please select options");
+            button.innerText = "ADD TO CART";
+            return;
+          }
+        
+          try {
+            const res = await fetch("/cart/add.js", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              },
+              body: JSON.stringify({
+                id: variant.id,
+                quantity: 1
+              })
+            });
+        
+            if (!res.ok) throw new Error("Failed");
+        
+            const data = await res.json();
+        
+            console.log("Added:", data);
+        
+            // ✅ FEEDBACK
+            button.innerText = "ADDED ✓";
+        
+            // ✅ OPTIONAL: open cart page
+            // window.location.href = "/cart";
+        
+          } catch (err) {
+            console.error(err);
+            alert("Error adding to cart");
+            button.innerText = "ADD TO CART";
+          }
+        
+        };
     
       });
     
