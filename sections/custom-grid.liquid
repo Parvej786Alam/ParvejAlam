@@ -42,39 +42,6 @@
 
 </section>
 
-<div id="qv-modal" class="qv-modal">
-  <div class="qv-box">
-
-    <span class="qv-close">×</span>
-
-    <div class="qv-grid">
-
-      <div class="qv-left">
-        <img id="qv-img">
-        <div class="content-box">
-            <h5 id="qv-title"></h5>
-            <p id="qv-price"></p>
-            <p id="qv-desc"></p>
-        </div>
-      </div>
-
-      <div class="qv-right">
-
-        <div class="qv-option">
-          <label>Size</label>
-          <select id="qv-size"></select>
-        </div>
-        <div class="qv-option">
-          <label>Color</label>
-          <div id="qv-colors"></div>
-        </div>
-
-        {% comment %} <a class="a-btn" href="cart">ADD TO CART</a> {% endcomment %}
-
-        <form method="post" action="/cart/add">
-  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-  <button type="submit">Add to cart</button>
-</form>
 
 
 
