@@ -398,8 +398,8 @@
           // variant updater
           function updateVariantId() {
             const variant = product.variants.find(v => {
-              return (!selectedColor || v.option1 === selectedColor) &&
-                     (!selectedSize || v.option2 === selectedSize);
+              return (!selectedColor || v.option2 === selectedColor) &&
+                     (!selectedSize || v.option1 === selectedSize);
             }) || product.variants[0];
     
             document.getElementById("qv-variant-id").value = variant.id;
