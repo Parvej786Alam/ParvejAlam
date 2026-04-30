@@ -444,7 +444,18 @@
           // BASIC DATA
           document.getElementById("qv-title").innerText = product.title;
           //document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
-          document.getElementById("qv-price").innerText = Shopify.formatMoney(product.price);
+          const priceBox = document.getElementById("qv-price");
+
+let priceHTML = Shopify.formatMoney(product.price);
+
+if (product.compare_at_price && product.compare_at_price > product.price) {
+  priceHTML = `
+    <span class="sale-price">${Shopify.formatMoney(product.price)}</span>
+    <span class="compare-price">${Shopify.formatMoney(product.compare_at_price)}</span>
+  `;
+}
+
+priceBox.innerHTML = priceHTML;
           document.getElementById("qv-img").src = product.images?.[0] || "";
           document.getElementById("qv-desc").innerHTML =
             (product.description || "").substring(0, 80) + "...";
