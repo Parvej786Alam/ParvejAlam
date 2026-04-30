@@ -389,11 +389,6 @@
     
           let colors = new Set();
           let sizes = new Set();
-    
-          {% comment %} product.variants.forEach(v => {
-            if (v.option1) colors.add(v.option1);
-            if (v.option2) sizes.add(v.option2);
-          }); {% endcomment %}
 
           let colorIndex = null;
           let sizeIndex = null;
@@ -416,11 +411,6 @@
           });
     
           // variant updater
-          function updateVariantId() {
-            {% comment %} const variant = product.variants.find(v => {
-              return (!selectedColor || v.option1 === selectedColor) &&
-                     (!selectedSize || v.option2 === selectedSize);
-            }) || product.variants[0]; {% endcomment %}
             function updateVariantId() {
               const variant = product.variants.find(v => {
                 return (!selectedColor || v.options[colorIndex] === selectedColor) &&
