@@ -443,7 +443,8 @@
     
           // BASIC DATA
           document.getElementById("qv-title").innerText = product.title;
-          document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
+          //document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
+          document.getElementById("qv-price").innerHTML = Shopify.formatMoney(product.price);
           document.getElementById("qv-img").src = product.images?.[0] || "";
           document.getElementById("qv-desc").innerHTML =
             (product.description || "").substring(0, 80) + "...";
@@ -476,8 +477,6 @@
             document.getElementById("qv-variant-id").value = variant.id;
           }
     
-          // COLORS
-
           /* COLOR MAPPING (REAL STORE SAFE) */
           const colorMap = {
             black: "#000000",
