@@ -373,7 +373,7 @@
             document.getElementById(`product-data-${btn.dataset.id}`).textContent
           );
     
-          modal.style.display = "flex";
+          {% comment %} modal.style.display = "flex"; {% endcomment %}
     
           // BASIC DATA
           document.getElementById("qv-title").innerText = product.title;
