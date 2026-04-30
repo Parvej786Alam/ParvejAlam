@@ -406,29 +406,32 @@
           }
     
           // COLORS
-          colors.forEach((c, index) => {
-            let b = document.createElement("button");
-            b.type = "button";
-            b.innerText = c;
-    
-            if (index === 0) {
-              selectedColor = c;
-              b.classList.add("active");
-            }
-    
-            b.onclick = () => {
-              selectedColor = c;
-    
-              document.querySelectorAll("#qv-colors button")
-                .forEach(btn => btn.classList.remove("active"));
-    
-              b.classList.add("active");
-    
-              updateVariantId();
-            };
-    
-            colorBox.appendChild(b);
-          });
+          // COLORS (LIMIT TO 2 ONLY)
+const colorArray = Array.from(colors).slice(0, 2);
+
+colorArray.forEach((c, index) => {
+  let b = document.createElement("button");
+  b.type = "button";
+  b.innerText = c;
+
+  if (index === 0) {
+    selectedColor = c;
+    b.classList.add("active");
+  }
+
+  b.onclick = () => {
+    selectedColor = c;
+
+    document.querySelectorAll("#qv-colors button")
+      .forEach(btn => btn.classList.remove("active"));
+
+    b.classList.add("active");
+
+    updateVariantId();
+  };
+
+  colorBox.appendChild(b);
+});
     
           // SIZES
           sizes.forEach((s, index) => {
