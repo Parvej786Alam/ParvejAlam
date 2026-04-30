@@ -56,11 +56,11 @@
             </div>
             <div class="qv-right">
               <div class="qv-option">
-                <label>Color</label>
+                <label>Size</label>
                 <select id="qv-size"></select>
               </div>
               <div class="qv-option">
-                <label>Size</label>
+                <label>Color</label>
                 <div id="qv-colors"></div>
               </div>
       
@@ -406,32 +406,31 @@
           }
     
           // COLORS
-          // COLORS (LIMIT TO 2 ONLY)
-const colorArray = Array.from(colors).slice(0, 2);
-
-colorArray.forEach((c, index) => {
-  let b = document.createElement("button");
-  b.type = "button";
-  b.innerText = c;
-
-  if (index === 0) {
-    selectedColor = c;
-    b.classList.add("active");
-  }
-
-  b.onclick = () => {
-    selectedColor = c;
-
-    document.querySelectorAll("#qv-colors button")
-      .forEach(btn => btn.classList.remove("active"));
-
-    b.classList.add("active");
-
-    updateVariantId();
-  };
-
-  colorBox.appendChild(b);
-});
+          const colorArray = Array.from(colors).slice(0, 2);
+          
+          colorArray.forEach((c, index) => {
+            let b = document.createElement("button");
+            b.type = "button";
+            b.innerText = c;
+          
+            if (index === 0) {
+              selectedColor = c;
+              b.classList.add("active");
+            }
+          
+            b.onclick = () => {
+              selectedColor = c;
+          
+              document.querySelectorAll("#qv-colors button")
+                .forEach(btn => btn.classList.remove("active"));
+          
+              b.classList.add("active");
+          
+              updateVariantId();
+            };
+          
+            colorBox.appendChild(b);
+          });
     
           // SIZES
           sizes.forEach((s, index) => {
