@@ -358,137 +358,174 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-      const modal = document.getElementById("qv-modal");
-    
-      document.querySelectorAll(".qv-btn").forEach(btn => {
-    
-        btn.addEventListener("click", () => {
-    
-          const product = JSON.parse(
-            document.getElementById(`product-data-${btn.dataset.id}`).textContent
-          );
-    
-          modal.style.display = "flex";
-    
-          // BASIC DATA
-          document.getElementById("qv-title").innerText = product.title;
-          document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
-          document.getElementById("qv-img").src = product.images?.[0] || "";
-          document.getElementById("qv-desc").innerHTML =
-            (product.description || "").substring(0, 80) + "...";
-    
-          // VARIANTS
-          const colorBox = document.getElementById("qv-colors");
-          const sizeBox = document.getElementById("qv-size");
-    
-          colorBox.innerHTML = "";
-          sizeBox.innerHTML = "";
-    
-          let selectedColor = null;
-          let selectedSize = null;
-    
-          let colors = new Set();
-          let sizes = new Set();
-    
-          {% comment %} product.variants.forEach(v => {
-            if (v.option1) colors.add(v.option1);
-            if (v.option2) sizes.add(v.option2);
-          }); {% endcomment %}
+  const modal = document.getElementById("qv-modal");
 
-          let colorIndex = null;
-          let sizeIndex = null;
-          
-          // detect option positions
-          product.options.forEach((opt, i) => {
-            const name = opt.name.toLowerCase();
-          
-            if (name.includes("color")) colorIndex = i;
-            if (name.includes("size")) sizeIndex = i;
-          });
-          
-          // fallback (if names are not "Color/Size")
-          if (colorIndex === null) colorIndex = 0;
-          if (sizeIndex === null) sizeIndex = 1;
-          
-          product.variants.forEach(v => {
-            if (v.options[colorIndex]) colors.add(v.options[colorIndex]);
-            if (v.options[sizeIndex]) sizes.add(v.options[sizeIndex]);
-          });
-    
-          // variant updater
-          function updateVariantId() {
-            {% comment %} const variant = product.variants.find(v => {
-              return (!selectedColor || v.option1 === selectedColor) &&
-                     (!selectedSize || v.option2 === selectedSize);
-            }) || product.variants[0]; {% endcomment %}
-            function updateVariantId() {
-              const variant = product.variants.find(v => {
-                return (!selectedColor || v.options[colorIndex] === selectedColor) &&
-                       (!selectedSize || v.options[sizeIndex] === selectedSize);
-              }) || product.variants[0];
-            
-              document.getElementById("qv-variant-id").value = variant.id;
-            }
-    
-            document.getElementById("qv-variant-id").value = variant.id;
-          }
-    
-          // COLORS
-          const colorArray = Array.from(colors).slice(0, 2);
-          
-          colorArray.forEach((c, index) => {
-            let b = document.createElement("button");
-            b.type = "button";
-            b.innerText = c;
-          
-            if (index === 0) {
-              selectedColor = c;
-              b.classList.add("active");
-            }
-          
-            b.onclick = () => {
-              selectedColor = c;
-          
-              document.querySelectorAll("#qv-colors button")
-                .forEach(btn => btn.classList.remove("active"));
-          
-              b.classList.add("active");
-          
-              updateVariantId();
-            };
-          
-            colorBox.appendChild(b);
-          });
-    
-          // SIZES
-          sizes.forEach((s, index) => {
-            let opt = document.createElement("option");
-            opt.value = s;
-            opt.text = s;
-    
-            if (index === 0) selectedSize = s;
-    
-            sizeBox.appendChild(opt);
-          });
-    
-          sizeBox.onchange = e => {
-            selectedSize = e.target.value;
-            updateVariantId();
-          };
-    
-          // INIT
-          updateVariantId();
-    
-        });
-    
+  document.querySelectorAll(".qv-btn").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+      const product = JSON.parse(
+        document.getElementById(`product-data-${btn.dataset.id}`).textContent
+      );
+
+      modal.style.display = "flex";
+
+      // BASIC DATA
+      document.getElementById("qv-title").innerText = product.title;
+      document.getElementById("qv-price").innerText = (product.price / 100).toFixed(2);
+      document.getElementById("qv-desc").innerHTML =
+        (product.description || "").substring(0, 80) + "...";
+
+      const imgEl = document.getElementById("qv-img");
+
+      // ELEMENTS
+      const colorBox = document.getElementById("qv-colors");
+      const sizeBox = document.getElementById("qv-size");
+
+      colorBox.innerHTML = "";
+      sizeBox.innerHTML = "";
+
+      let selectedColor = null;
+      let selectedSize = null;
+
+      let colors = new Set();
+      let sizes = new Set();
+
+      let colorIndex = null;
+      let sizeIndex = null;
+
+      // DETECT OPTION INDEX
+      product.options.forEach((opt, i) => {
+        const name = opt.name.toLowerCase();
+        if (name.includes("color")) colorIndex = i;
+        if (name.includes("size")) sizeIndex = i;
       });
-    
-      // CLOSE
-      document.querySelector(".qv-close").onclick = () => {
-        modal.style.display = "none";
+
+      if (colorIndex === null && product.options.length > 0) colorIndex = 0;
+      if (sizeIndex === null && product.options.length > 1) sizeIndex = 1;
+
+      // COLLECT OPTIONS
+      product.variants.forEach(v => {
+        if (v.options[colorIndex]) colors.add(v.options[colorIndex]);
+        if (v.options[sizeIndex]) sizes.add(v.options[sizeIndex]);
+      });
+
+      // UPDATE IMAGE
+      function updateImage(variant) {
+        if (variant.featured_image) {
+          imgEl.src = variant.featured_image.src;
+        } else {
+          imgEl.src = product.images?.[0] || "";
+        }
+      }
+
+      // UPDATE VARIANT
+      function updateVariant() {
+        const variant = product.variants.find(v => {
+          return (!selectedColor || v.options[colorIndex] === selectedColor) &&
+                 (!selectedSize || v.options[sizeIndex] === selectedSize);
+        });
+
+        if (variant) {
+          document.getElementById("qv-variant-id").value = variant.id;
+
+          // Update image
+          updateImage(variant);
+
+          // Stock state
+          const btn = document.querySelector(".a-btn");
+          if (variant.available) {
+            btn.disabled = false;
+            btn.innerText = "ADD TO CART";
+          } else {
+            btn.disabled = true;
+            btn.innerText = "OUT OF STOCK";
+          }
+        }
+      }
+
+      // UPDATE SIZE AVAILABILITY
+      function updateSizesAvailability() {
+        const options = sizeBox.querySelectorAll("option");
+
+        options.forEach(opt => {
+          const size = opt.value;
+
+          const exists = product.variants.find(v => {
+            return (!selectedColor || v.options[colorIndex] === selectedColor) &&
+                   v.options[sizeIndex] === size &&
+                   v.available;
+          });
+
+          opt.disabled = !exists;
+        });
+      }
+
+      // COLORS (SWATCHES - MAX 2)
+      const colorArray = Array.from(colors).slice(0, 2);
+
+      colorArray.forEach((c, index) => {
+        let b = document.createElement("button");
+        b.type = "button";
+        b.title = c;
+
+        // swatch style
+        b.style.background = c.toLowerCase();
+        b.style.width = "28px";
+        b.style.height = "28px";
+        b.style.borderRadius = "50%";
+        b.style.border = "1px solid #ccc";
+
+        if (index === 0) {
+          selectedColor = c;
+          b.classList.add("active");
+        }
+
+        b.onclick = () => {
+          selectedColor = c;
+
+          document.querySelectorAll("#qv-colors button")
+            .forEach(btn => btn.classList.remove("active"));
+
+          b.classList.add("active");
+
+          updateSizesAvailability();
+          updateVariant();
+        };
+
+        colorBox.appendChild(b);
+      });
+
+      // SIZES (DROPDOWN)
+      sizes.forEach((s, index) => {
+        let opt = document.createElement("option");
+        opt.value = s;
+        opt.text = s;
+
+        if (index === 0) selectedSize = s;
+
+        sizeBox.appendChild(opt);
+      });
+
+      sizeBox.onchange = e => {
+        selectedSize = e.target.value;
+        updateVariant();
       };
-    
+
+      // INIT
+      updateSizesAvailability();
+      updateVariant();
+
     });
+
+  });
+
+  // CLOSE MODAL
+  document.querySelector(".qv-close").onclick = () => {
+    modal.style.display = "none";
+  };
+
+});
 
 </script>
 
