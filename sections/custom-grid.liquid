@@ -176,12 +176,12 @@
     }
     
     @media(max-width: 600px) {
-        .featured-collection {
-            padding: 16px;
-        }
-        .product-grid {
-            gap: 4px;
-        }
+      .featured-collection {
+        padding: 16px;
+      }
+      .product-grid {
+        gap: 4px;
+      }
     }
     
     .product-card {
@@ -315,11 +315,11 @@
     
     /* TITLE */
     #qv-title {
-        font-size: 16px;
-        font-weight: 300;
-        margin-bottom: 10px;
-        color: #111;
-        line-height: 120%;
+      font-size: 16px;
+      font-weight: 300;
+      margin-bottom: 10px;
+      color: #111;
+      line-height: 120%;
     }
     
     /* PRICE */
@@ -332,12 +332,12 @@
     
     /* DESCRIPTION */
     #qv-desc {
-        font-size: 14px;
-        font-weight: 300;
-        line-height: 110%;
-        color: #000;
-        margin-top: 10px;
-        letter-spacing: -1%;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 110%;
+      color: #000;
+      margin-top: 10px;
+      letter-spacing: -1%;
     }
     
     /* MOBILE RESPONSIVE */
@@ -360,32 +360,37 @@
       border: 1px solid #000;
     }
 
-#qv-colors button {
-  position: relative;
-  padding: 10px 16px;
-  /*border: 1px solid #ccc; */
-  background: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  min-width: 70px;
-}
-
-/* THICK COLOR LINE */
-#qv-colors button::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100%;
-  width: 5px;
-  background: currentColor;
-}
-
-/* ACTIVE STATE */
-#qv-colors button.active {
-  border: 2px solid #000;
-}
+    #qv-colors button {
+      position: relative;
+      padding: 10px 16px;
+      /*border: 1px solid #ccc; */
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      min-width: 70px;
+    }
+    
+    /* THICK COLOR LINE */
+    #qv-colors button::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: 5px;
+      background: currentColor;
+    }
+    
+    /* active state */
+    #qv-colors button.active {
+      border: 2px solid #000;
+    }
+    
+    /* white visibility fix */
+    #qv-colors button[data-color="white"]::after {
+      border: 1px solid #ccc;
+    }
 </style>
 
 <script>
@@ -439,6 +444,24 @@
           }
     
           // COLORS
+
+          /* COLOR MAPPING (REAL STORE SAFE) */
+          const colorMap = {
+            black: "#000000",
+            white: "#ffffff",
+            red: "#ff0000",
+            blue: "#0000ff",
+            green: "#008000",
+            yellow: "#ffff00",
+            grey: "#808080",
+            gray: "#808080",
+            beige: "#f5f5dc",
+            ivory: "#fffff0",
+            "ocean blue": "#4f8ef7",
+            "dark blue": "#00008b"
+          };
+          
+          // COLORS (LIMIT 2)
           const colorArray = Array.from(colors).slice(0, 2);
           
           colorArray.forEach((c, index) => {
@@ -446,6 +469,14 @@
             b.type = "button";
             b.innerText = c;
           
+            const colorKey = c.toLowerCase().trim();
+
+            const colorValue = colorMap[colorKey] || colorKey;
+          
+            b.style.setProperty("--swatch-color", colorValue);
+
+            b.setAttribute("data-color", colorKey);
+
             if (index === 0) {
               selectedColor = c;
               b.classList.add("active");
@@ -464,6 +495,7 @@
           
             colorBox.appendChild(b);
           });
+
     
           // SIZES
           sizes.forEach((s, index) => {
